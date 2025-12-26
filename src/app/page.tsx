@@ -517,6 +517,83 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Experience & Credentials Section */}
+      <motion.section 
+        className="px-6 py-20"
+        style={{ backgroundColor: 'var(--color-bg-secondary)' }}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ 
+          duration: 0.3, 
+          ease: [0.4, 0.0, 0.2, 1] 
+        }}
+      >
+        <div className="max-w-6xl w-full mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-16">Experience & Credentials</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+            {/* Professional Experience */}
+            <div>
+              <h3 className="text-xl md:text-2xl font-semibold mb-6">Professional Experience</h3>
+              
+              <div className="mb-8">
+                <div className="mb-3">
+                  <p className="text-lg font-medium">Software Engineering Intern</p>
+                  <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>Tark Technologies</p>
+                </div>
+                
+                <ul className="space-y-3">
+                  <li className="flex gap-3">
+                    <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Worked on building a billing engine using object-oriented design principles
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Applied SOLID principles and class-level design for scalable code
+                    </span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }}>
+                      Gained experience in debugging, optimization, and writing maintainable systems
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Certifications / Credentials */}
+            <div>
+              <h3 className="text-xl md:text-2xl font-semibold mb-6">Certifications</h3>
+              
+              <ul className="space-y-3 mb-10">
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Microsoft Azure AI-900: Azure AI Fundamentals
+                  </span>
+                </li>
+              </ul>
+
+              <h3 className="text-xl md:text-2xl font-semibold mb-6">Patents & Research</h3>
+              
+              <ul className="space-y-3">
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Patent filed for novel methodology in real-time log analysis
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Project Modal */}
       {activeProject && (
         <ProjectModal 
