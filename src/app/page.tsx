@@ -353,7 +353,11 @@ export default function Home() {
             <button className="px-6 py-3 rounded-lg font-medium" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-bg-primary)' }}>
               View Projects
             </button>
-            <button className="px-6 py-3 rounded-lg font-medium" style={{ border: '1px solid var(--color-border-subtle)', color: 'var(--color-text-primary)' }}>
+            <button 
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-6 py-3 rounded-lg font-medium" 
+              style={{ border: '1px solid var(--color-border-subtle)', color: 'var(--color-text-primary)' }}
+            >
               Contact Me
             </button>
           </div>
@@ -519,7 +523,7 @@ export default function Home() {
 
       {/* Experience & Credentials Section */}
       <motion.section 
-        className="px-6 py-20"
+        className="px-6 py-20 min-h-screen flex items-center"
         style={{ backgroundColor: 'var(--color-bg-secondary)' }}
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -594,6 +598,93 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* About Section */}
+      <motion.section 
+        className="px-6 py-20 min-h-screen flex items-center"
+        style={{ backgroundColor: 'var(--color-bg-primary)' }}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ 
+          duration: 0.3, 
+          ease: [0.4, 0.0, 0.2, 1] 
+        }}
+      >
+        <div className="max-w-3xl w-full mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-8">About</h2>
+          
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            I spend time understanding problems before writing code. I prefer building systems that are clear 
+            and maintainable over ones that are clever but hard to change. I care as much about user experience 
+            as I do about technical correctness—software should work well and feel intuitive. I work on problems 
+            where the solution has real impact, whether that's reducing friction in workflows or improving how 
+            systems handle complexity. I value thoughtful collaboration and direct communication, where ideas are 
+            challenged constructively and decisions are made with shared understanding.
+          </p>
+        </div>
+      </motion.section>
+
+      {/* Contact Section */}
+      <motion.section 
+        id="contact"
+        className="px-6 py-20 min-h-screen flex items-center"
+        style={{ backgroundColor: 'var(--color-bg-secondary)' }}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ 
+          duration: 0.3, 
+          ease: [0.4, 0.0, 0.2, 1] 
+        }}
+      >
+        <div className="max-w-3xl w-full mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Contact</h2>
+          
+          <p className="text-base md:text-lg mb-12" style={{ color: 'var(--color-text-secondary)' }}>
+            Whether you have a project in mind, want to collaborate, or just want to connect—feel free to reach out.
+          </p>
+
+          <div className="space-y-6 mb-12">
+            <div>
+              <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>Email</p>
+              <a 
+                href="mailto:your.email@example.com" 
+                className="text-lg md:text-xl contact-link"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                your.email@example.com
+              </a>
+            </div>
+
+            <div>
+              <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>GitHub</p>
+              <a 
+                href="https://github.com/Kaushal2710" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg md:text-xl contact-link"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                github.com/Kaushal2710
+              </a>
+            </div>
+
+            <div>
+              <p className="text-sm mb-2" style={{ color: 'var(--color-text-secondary)' }}>LinkedIn</p>
+              <a 
+                href="https://linkedin.com/in/yourprofile" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg md:text-xl contact-link"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                linkedin.com/in/yourprofile
+              </a>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Project Modal */}
       {activeProject && (
         <ProjectModal 
@@ -601,9 +692,6 @@ export default function Home() {
           onClose={() => setActiveProject(null)} 
         />
       )}
-
-      {/* Placeholder for future sections */}
-      {/* Add Contact, About, etc. here */}
     </div>
   );
 }
