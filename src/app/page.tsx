@@ -385,6 +385,138 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Technical Depth Section */}
+      <motion.section 
+        className="px-6 py-20"
+        style={{ backgroundColor: 'var(--color-bg-primary)' }}
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ 
+          duration: 0.3, 
+          ease: [0.4, 0.0, 0.2, 1] 
+        }}
+      >
+        <div className="max-w-6xl w-full mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Technical Depth</h2>
+          
+          <p className="text-base md:text-lg mb-16 max-w-3xl" style={{ color: 'var(--color-text-secondary)' }}>
+            I focus on understanding systems deeply before building them,
+            so the solutions are scalable, reliable, and easy to use.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+            {/* Pillar 1 */}
+            <div className="pillar-item">
+              <h3 className="text-xl md:text-2xl font-semibold mb-4">
+                System Design & Architecture
+              </h3>
+              <ul className="space-y-3">
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Designing clear data and control flows instead of tightly coupled logic
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Making conscious trade-offs between scalability, simplicity, and performance
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Structuring backend services and APIs for long-term maintainability
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 2 */}
+            <div className="pillar-item">
+              <h3 className="text-xl md:text-2xl font-semibold mb-4">
+                AI / ML Systems (Applied)
+              </h3>
+              <ul className="space-y-3">
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Treating ML models as system components, not black boxes
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Handling latency, accuracy trade-offs, and failure cases in real-world usage
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Evaluating models using meaningful metrics instead of raw accuracy alone
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 3 */}
+            <div className="pillar-item">
+              <h3 className="text-xl md:text-2xl font-semibold mb-4">
+                Automation & Optimization
+              </h3>
+              <ul className="space-y-3">
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Identifying repetitive or error-prone workflows and automating them
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Designing systems that fail gracefully and are easy to debug
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Optimizing for reliability and clarity before premature performance gains
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Pillar 4 */}
+            <div className="pillar-item">
+              <h3 className="text-xl md:text-2xl font-semibold mb-4">
+                Frontend Engineering & UX
+              </h3>
+              <ul className="space-y-3">
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Managing complex state without compromising user experience
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Designing interactions that feel intentional, not decorative
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
+                  <span style={{ color: 'var(--color-text-secondary)' }}>
+                    Balancing performance, accessibility, and visual clarity
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Project Modal */}
       {activeProject && (
         <ProjectModal 
