@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg-primary: #0b0b0f;
+  --color-bg-secondary: #12121a;
+
+  --color-text-primary: #eaeaf0;
+  --color-text-secondary: #a1a1b3;
+
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+
+  --color-accent: #5eead4; /* placeholder */
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* Dark mode scrollbar - Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(234, 234, 240, 0.2) rgba(18, 18, 26, 0.3);
+}
+
+/* Dark mode scrollbar - WebKit (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(18, 18, 26, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(234, 234, 240, 0.2);
+  border-radius: 5px;
+  border: 2px solid rgba(18, 18, 26, 0.3);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(234, 234, 240, 0.35);
+}
+
+/* Ensure modal scrollbar inherits dark styling */
+.overflow-y-auto::-webkit-scrollbar-track,
+[style*="overflow-y"]::-webkit-scrollbar-track {
+  background: rgba(18, 18, 26, 0.5);
+}
+
+/* View details hover affordance - desktop only */
+@media (min-width: 768px) {
+  .view-details-link {
+    position: relative;
+    display: inline-block;
+    transition: transform 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+
+  .view-details-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--color-accent);
+    transition: width 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+
+  .view-details-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .view-details-link:hover::after {
+    width: 100%;
+  }
+}
+
