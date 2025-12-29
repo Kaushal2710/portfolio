@@ -139,62 +139,71 @@ function ProjectModal({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.5, ease: [0.2, 0.0, 0.0, 1] }}
-        className="fixed inset-0 z-50 flex items-end md:items-center justify-center"
+        transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
+        className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4"
         style={{ 
-          backgroundColor: 'rgba(11, 11, 15, 0.85)',
-          backdropFilter: 'blur(4px)'
+          backgroundColor: 'rgba(11, 11, 15, 0.9)',
+          backdropFilter: 'blur(8px)'
         }}
         onClick={onClose}
       >
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: '100%' }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 40 }}
-          transition={{ duration: 0.5, ease: [0.2, 0.0, 0.0, 1] }}
+          exit={{ opacity: 0, y: '100%' }}
+          transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-3xl mx-4 mb-4 md:mb-0 max-h-[85vh] overflow-y-auto rounded-t-2xl md:rounded-2xl"
+          className="w-full md:max-w-4xl h-[90vh] md:h-auto md:max-h-[85vh] overflow-y-auto rounded-t-3xl md:rounded-2xl"
           style={{ 
             backgroundColor: 'var(--color-bg-secondary)',
-            borderTop: '1px solid var(--color-border-subtle)'
+            borderTop: '2px solid var(--color-border-subtle)',
+            boxShadow: '0 -4px 40px rgba(0, 0, 0, 0.5)'
           }}
         >
-          <div className="p-6 md:p-10">
+          <div className="sticky top-0 z-10 px-4 py-3 md:hidden flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-secondary)', borderBottom: '1px solid var(--color-border-subtle)' }}>
+            <div className="w-12 h-1 rounded-full" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
+          </div>
+          <div className="p-5 md:p-10">
             {/* Close button */}
             <button
               onClick={onClose}
-              className="mb-6 text-sm"
+              className="mb-6 text-sm flex items-center gap-2 transition-colors"
               style={{ color: 'var(--color-text-secondary)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
             >
-              ← Close
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              Close
             </button>
             
             {/* Project title */}
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+            <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-3 leading-tight">
               {project.title}
             </h2>
             
             {/* Domain tag */}
-            <p className="text-sm mb-8" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="text-xs md:text-sm mb-6 md:mb-8" style={{ color: 'var(--color-text-secondary)' }}>
               {project.domain}
             </p>
             
             {/* Problem context */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Problem Space</h3>
-              <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            <div className="mb-6 md:mb-8">
+              <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">Problem Space</h3>
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                 {project.problem}
               </p>
             </div>
             
             {/* Challenges */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Key Constraints</h3>
-              <ul className="space-y-2">
+            <div className="mb-6 md:mb-8">
+              <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">Key Constraints</h3>
+              <ul className="space-y-2 md:space-y-2.5">
                 {project.challenges.map((challenge, idx) => (
-                  <li key={idx} className="flex gap-3">
+                  <li key={idx} className="flex gap-2 md:gap-3 text-sm md:text-base">
                     <span style={{ color: 'var(--color-accent)' }}>·</span>
-                    <span style={{ color: 'var(--color-text-secondary)' }}>{challenge}</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }} className="leading-relaxed">{challenge}</span>
                   </li>
                 ))}
               </ul>
@@ -202,8 +211,8 @@ function ProjectModal({
             
             {/* Visual Artifact */}
             {project.id === 'emr-platform' && (
-              <div className="mb-8">
-                <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
+              <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
+                <div className="md:rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
                   <Image
                     src="/projects/emr/consultationPage.webp"
                     alt="EMR consultation interface"
@@ -216,8 +225,8 @@ function ProjectModal({
               </div>
             )}
             {project.id === 'log-analysis' && (
-              <div className="mb-8">
-                <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
+              <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
+                <div className="md:rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
                   <Image
                     src="/projects/logAnalysis/analysisDashboard.png"
                     alt="Log analysis dashboard"
@@ -230,8 +239,8 @@ function ProjectModal({
               </div>
             )}
             {project.id === 'bill-automation' && (
-              <div className="mb-8">
-                <div className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
+              <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
+                <div className="md:rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
                   <Image
                     src="/projects/purchase-automation/PBA2datapreview2.webp"
                     alt="Bill automation data preview"
@@ -245,26 +254,26 @@ function ProjectModal({
             )}
 
             {/* Engineering */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">System Design & Implementation</h3>
-              <ul className="space-y-2">
+            <div className="mb-6 md:mb-8">
+              <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">System Design & Implementation</h3>
+              <ul className="space-y-2 md:space-y-2.5">
                 {project.engineering.map((item, idx) => (
-                  <li key={idx} className="flex gap-3">
+                  <li key={idx} className="flex gap-2 md:gap-3 text-sm md:text-base">
                     <span style={{ color: 'var(--color-accent)' }}>·</span>
-                    <span style={{ color: 'var(--color-text-secondary)' }}>{item}</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }} className="leading-relaxed">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
             
             {/* Tech stack */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-3">Tech stack</h3>
+            <div className="mb-6 md:mb-8">
+              <h3 className="text-base md:text-lg font-semibold mb-2 md:mb-3">Tech stack</h3>
               <div className="flex flex-wrap gap-2">
                 {project.techStack.map((tech, idx) => (
                   <span
                     key={idx}
-                    className="px-3 py-1 text-sm rounded"
+                    className="px-2.5 md:px-3 py-1 text-xs md:text-sm rounded"
                     style={{ 
                       backgroundColor: 'var(--color-bg-primary)',
                       color: 'var(--color-text-secondary)',
@@ -356,7 +365,7 @@ function Project({
   return (
     <motion.div 
       ref={ref}
-      className="min-h-[50vh] md:min-h-[70vh] flex flex-col md:flex-row md:items-center py-12 cursor-pointer group relative"
+      className="min-h-[40vh] md:min-h-[70vh] flex flex-col md:flex-row md:items-center py-8 md:py-12 cursor-pointer group relative"
       style={{ 
         opacity,
         scale
@@ -517,7 +526,7 @@ export default function Home() {
             />
             
             <motion.h1 
-              className="text-4xl md:text-5xl lg:text-5xl font-bold mb-6 leading-tight"
+              className="text-3xl md:text-5xl lg:text-5xl font-bold mb-6 leading-tight"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
@@ -526,7 +535,7 @@ export default function Home() {
             </motion.h1>
             
             <motion.p 
-              className="text-lg md:text-xl mb-8" 
+              className="text-base md:text-xl mb-8 leading-relaxed" 
               style={{ color: 'var(--color-text-secondary)' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -537,7 +546,7 @@ export default function Home() {
             </motion.p>
             
             <motion.p 
-              className="text-base md:text-lg mb-12 italic" 
+              className="text-sm md:text-lg mb-10 md:mb-12 italic" 
               style={{ color: 'var(--color-text-secondary)' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -547,13 +556,13 @@ export default function Home() {
             </motion.p>
             
             <motion.div 
-              className="flex flex-col sm:flex-row gap-4"
+              className="flex flex-col sm:flex-row gap-3 md:gap-4"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.4 }}
             >
               <motion.button 
-                className="px-6 py-3 rounded-lg font-medium relative overflow-hidden group" 
+                className="px-5 md:px-6 py-2.5 md:py-3 rounded-lg font-medium relative overflow-hidden group text-sm md:text-base" 
                 style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-bg-primary)' }}
                 whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(94, 234, 212, 0.3)' }}
                 whileTap={{ scale: 0.98 }}
@@ -609,15 +618,15 @@ export default function Home() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Projects</h2>
             <motion.div 
-              className="h-1 rounded-full mb-16"
+              className="h-1 rounded-full mb-12 md:mb-16"
               style={{ 
                 background: 'linear-gradient(90deg, var(--color-accent), transparent)',
-                width: '120px'
+                width: '80px'
               }}
               initial={{ width: 0 }}
-              whileInView={{ width: '120px' }}
+              whileInView={{ width: '80px' }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             />
@@ -1337,9 +1346,9 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="relative py-12 px-6" style={{ backgroundColor: 'var(--color-bg-primary)', borderTop: '1px solid var(--color-border-subtle)' }}>
+      <footer className="relative py-8 md:py-12 px-4 md:px-6" style={{ backgroundColor: 'var(--color-bg-primary)', borderTop: '1px solid var(--color-border-subtle)' }}>
         <div className="max-w-6xl w-full mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
             {/* Left - Brand */}
             <div>
               <h3 className="text-lg font-semibold mb-3" style={{ color: 'var(--color-text-primary)' }}>Kaushal Ambaliya</h3>
@@ -1397,8 +1406,8 @@ export default function Home() {
           </div>
 
           {/* Bottom - Copyright */}
-          <div className="pt-8 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="pt-6 md:pt-8 border-t" style={{ borderColor: 'var(--color-border-subtle)' }}>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 text-center md:text-left">
               <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                 © {new Date().getFullYear()} Kaushal Ambaliya. All rights reserved.
               </p>

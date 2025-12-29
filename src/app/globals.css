@@ -18,10 +18,25 @@ body {
   padding: 0;
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+/* Improve touch scrolling on mobile */
+@media (max-width: 768px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Dark mode scrollbar - Firefox */
