@@ -115,8 +115,11 @@ function ProjectModal({
   useEffect(() => {
     if (!project) return;
     
-    // Lock body scroll
+    // Lock body scroll and prevent width shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    document.documentElement.style.overflow = 'hidden';
     
     // ESC key handler
     const handleEsc = (e: KeyboardEvent) => {
@@ -126,7 +129,9 @@ function ProjectModal({
     window.addEventListener('keydown', handleEsc);
     
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.documentElement.style.overflow = '';
       window.removeEventListener('keydown', handleEsc);
     };
   }, [project, onClose]);
@@ -140,10 +145,12 @@ function ProjectModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
-        className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4"
+        className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 overflow-hidden"
         style={{ 
           backgroundColor: 'rgba(11, 11, 15, 0.9)',
-          backdropFilter: 'blur(8px)'
+          backdropFilter: 'blur(8px)',
+          width: '100vw',
+          maxWidth: '100vw'
         }}
         onClick={onClose}
       >
@@ -153,11 +160,12 @@ function ProjectModal({
           exit={{ opacity: 0, y: '100%' }}
           transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full md:max-w-4xl h-[90vh] md:h-auto md:max-h-[85vh] overflow-y-auto rounded-t-3xl md:rounded-2xl"
+          className="w-full md:max-w-4xl h-[90vh] md:h-auto md:max-h-[85vh] overflow-y-auto overflow-x-hidden rounded-t-3xl md:rounded-2xl"
           style={{ 
             backgroundColor: 'var(--color-bg-secondary)',
             borderTop: '2px solid var(--color-border-subtle)',
-            boxShadow: '0 -4px 40px rgba(0, 0, 0, 0.5)'
+            boxShadow: '0 -4px 40px rgba(0, 0, 0, 0.5)',
+            maxWidth: '100vw'
           }}
         >
           <div className="sticky top-0 z-10 px-4 py-3 md:hidden flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-secondary)', borderBottom: '1px solid var(--color-border-subtle)' }}>
@@ -436,7 +444,7 @@ export default function Home() {
     <div>
       {/* Hero Section */}
       <motion.section 
-        className="hero-section min-h-screen flex items-center justify-center px-6 py-20 relative overflow-hidden"
+        className="hero-section min-h-screen flex items-center justify-center px-4 md:px-6 py-20 relative overflow-hidden w-full"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
@@ -463,16 +471,7 @@ export default function Home() {
           }}
         />
         
-        {/* Bottom gradient transition */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to bottom, transparent, var(--color-bg-secondary))',
-            zIndex: 1
-          }}
-        />
-        
-        <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center relative z-10">
+        <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
           {/* Portrait - Above text on mobile, right side on desktop */}
           <div className="order-1 md:order-2 flex justify-center md:justify-end">
             <motion.div 
@@ -589,7 +588,7 @@ export default function Home() {
       </motion.section>
 
       {/* Projects Section */}
-      <section className="relative" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
+      <section className="relative w-full" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
         {/* Top gradient transition */}
         <div 
           className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
@@ -701,7 +700,7 @@ export default function Home() {
 
       {/* Core Competencies Section */}
       <motion.section 
-        className="px-6 py-24 relative"
+        className="px-4 md:px-6 py-24 relative w-full"
         style={{ backgroundColor: 'var(--color-bg-primary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -854,7 +853,7 @@ export default function Home() {
 
       {/* Professional Background Section */}
       <motion.section 
-        className="px-6 py-24 min-h-screen flex items-center relative"
+        className="px-4 md:px-6 py-24 min-h-screen flex items-center relative w-full"
         style={{ backgroundColor: 'var(--color-bg-secondary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -961,7 +960,7 @@ export default function Home() {
 
       {/* About Section */}
       <motion.section 
-        className="px-6 py-20 min-h-screen flex items-center relative"
+        className="px-4 md:px-6 py-20 min-h-screen flex items-center relative w-full"
         style={{ backgroundColor: 'var(--color-bg-primary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -1034,7 +1033,7 @@ export default function Home() {
       {/* Contact Section */}
       <motion.section 
         id="contact"
-        className="px-6 py-24 min-h-screen flex items-center relative overflow-hidden"
+        className="px-4 md:px-6 py-24 min-h-screen flex items-center relative overflow-hidden w-full"
         style={{ backgroundColor: 'var(--color-bg-secondary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
