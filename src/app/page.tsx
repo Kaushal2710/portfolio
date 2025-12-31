@@ -15,6 +15,7 @@ interface ProjectData {
   engineering: string[];
   techStack: string[];
   links?: { label: string; url: string }[];
+  images?: string[];
 }
 
 const projectsData: ProjectData[] = [
@@ -37,7 +38,8 @@ const projectsData: ProjectData[] = [
       'Cloud deployment with real-time updates'
     ],
     techStack: ['React', 'Firebase', 'Firestore', 'Authentication', 'Tailwind CSS'],
-    links: []
+    links: [],
+    images: ['/projects/emr/consultationPage.webp']
   },
   {
     id: 'log-analysis',
@@ -58,7 +60,12 @@ const projectsData: ProjectData[] = [
       'Real-time inference with optimized latency'
     ],
     techStack: ['Python', 'PyTorch', 'TinyBERT', 'Optuna', 'Streamlit', 'BGL Dataset'],
-    links: []
+    links: [],
+    images: [
+      '/projects/logAnalysis/analysisDashboard.png',
+      '/projects/logAnalysis/LA1Loganalysis1.png',
+      '/projects/logAnalysis/LA3Loganalysis3.png'
+    ]
   },
   {
     id: 'bill-automation',
@@ -79,7 +86,11 @@ const projectsData: ProjectData[] = [
       'Error-handling flows for low-confidence inputs'
     ],
     techStack: ['Python', 'GPT api', 'Tauri', 'PywinAuto', 'Automation Scripts'],
-    links: []
+    links: [],
+    images: [
+      '/projects/purchase-automation/PBA2datapreview2.webp',
+      '/projects/purchase-automation/PBA1uploadpage1.jpeg'
+    ]
   },
   {
     id: 'isl-recognition',
@@ -104,6 +115,292 @@ const projectsData: ProjectData[] = [
   }
 ];
 
+// Additional projects data
+const additionalProjectsData = [
+  {
+    id: 'depot-inventory',
+    title: 'Inventory & Order Management Platform',
+    subtitle: 'Depot Business',
+    description: 'Sales and inventory management system designed for depot businesses handling products from multiple factories, with order tracking and salesperson workflows.',
+    overview: 'A web-based inventory and order management system built for depot businesses handling products from multiple factories and sales channels.',
+    useCase: [
+      'Multi-product inventory tracking',
+      'Salesperson order entry and planning',
+      'Centralized order visibility for admins',
+      'Business-focused usability over complexity'
+    ],
+    features: [
+      'Inventory tracking across product categories',
+      'Order creation and status tracking',
+      'Salesperson workflows with location data',
+      'Admin dashboard for inventory and orders'
+    ],
+    role: [
+      'Designed UI and data flow',
+      'Implemented frontend and database logic',
+      'Integrated role-based access',
+      'Deployed and tested end-to-end'
+    ],
+    techStack: ['React', 'Firebase', 'Firestore', 'RBAC', 'Tailwind CSS'],
+    images: ['/projects/depot-inventory/cover.webp']
+  },
+  {
+    id: 'ims',
+    title: 'Inventory Management System',
+    subtitle: 'IMS',
+    description: 'Internal inventory management system focused on stock tracking, role-based operations, and streamlined data entry for business use.',
+    overview: 'An internal inventory management system designed to simplify stock tracking and operational workflows for small to mid-sized business environments.',
+    useCase: [
+      'Internal stock tracking',
+      'Controlled access based on user roles',
+      'Fast data entry and updates',
+      'Reliability over feature overload'
+    ],
+    features: [
+      'CRUD operations for inventory items',
+      'Role-based access control',
+      'Clean and focused internal UI',
+      'Data consistency checks'
+    ],
+    role: [
+      'Designed system structure',
+      'Built frontend and backend integration',
+      'Implemented access control logic',
+      'Handled testing and refinements'
+    ],
+    techStack: ['React', 'SQL', 'Backend APIs'],
+    images: ['/projects/ims/cover.webp']
+  },
+  {
+    id: 'tidytown',
+    title: 'TidyTown',
+    subtitle: 'Civic Platform',
+    description: 'Civic waste management platform enabling waste tracking, user engagement, and data-driven sustainability insights.',
+    overview: 'A civic-focused waste management platform aimed at tracking waste generation and encouraging sustainable practices through data.',
+    useCase: [
+      'Waste tracking at user level',
+      'Data-driven insights for waste reduction',
+      'Community-facing usability',
+      'Integration of ML-driven classification'
+    ],
+    features: [
+      'Waste logging and categorization',
+      'Data visualization and insights',
+      'ML-based waste classification integration',
+      'User-friendly frontend flows'
+    ],
+    role: [
+      'Designed frontend experience',
+      'Integrated Firebase backend',
+      'Connected ML outputs to UI',
+      'Iterated based on usability testing'
+    ],
+    techStack: ['React', 'Firebase', 'ML Models', 'Data Visualization'],
+    images: ['/projects/tidytown/cover.webp']
+  }
+];
+
+// Image carousel component for project modal
+function ImageCarousel({ images }: { images: string[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [maxHeight, setMaxHeight] = useState<number>(450);
+
+  if (!images || images.length === 0) return null;
+
+  // Calculate max height of all images in this set
+  useEffect(() => {
+    if (images.length === 0) return;
+
+    const loadImages = async () => {
+      const heights = await Promise.all(
+        images.map(
+          (src) =>
+            new Promise<number>((resolve) => {
+              const img = new window.Image();
+              img.onload = () => {
+                // Calculate height for 800px width (standard)
+                const aspectRatio = img.height / img.width;
+                resolve(800 * aspectRatio);
+              };
+              img.onerror = () => resolve(450); // fallback
+              img.src = src;
+            })
+        )
+      );
+      setMaxHeight(Math.max(...heights, 450));
+    };
+
+    loadImages();
+  }, [images]);
+
+  const goToPrevious = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const goToNext = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? '-100%' : '100%',
+      opacity: 0
+    })
+  };
+
+  return (
+    <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
+      <div 
+        className="relative md:rounded-lg overflow-hidden" 
+        style={{ 
+          border: '1px solid var(--color-border-subtle)',
+          height: `${maxHeight}px`,
+          backgroundColor: 'var(--color-bg-secondary)'
+        }}
+      >
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          <motion.div
+            key={currentIndex}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 250, damping: 25 },
+              opacity: { duration: 0.15 }
+            }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={(_, info) => {
+              const swipeThreshold = 50;
+              const swipeVelocityThreshold = 500;
+              
+              if (info.offset.x > swipeThreshold || info.velocity.x > swipeVelocityThreshold) {
+                // Swiped right - go to previous
+                goToPrevious();
+              } else if (info.offset.x < -swipeThreshold || info.velocity.x < -swipeVelocityThreshold) {
+                // Swiped left - go to next
+                goToNext();
+              }
+            }}
+            className="absolute inset-0"
+          >
+            {/* Blurred background layer */}
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `url(${images[currentIndex]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'blur(40px) brightness(0.4)',
+                transform: 'scale(1.2)'
+              }}
+            />
+            
+            {/* Main image centered */}
+            <div className="absolute inset-0 flex items-center justify-center p-2 pointer-events-none">
+              <div className="relative w-full h-full">
+                <Image
+                  src={images[currentIndex]}
+                  alt={`Project screenshot ${currentIndex + 1}`}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  quality={90}
+                />
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+        
+        {images.length > 1 && (
+          <>
+            {/* Previous button */}
+            <motion.button
+              onClick={goToPrevious}
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 p-2.5 md:p-3 rounded-full transition-all z-20"
+              style={{
+                backgroundColor: 'rgba(11, 11, 15, 0.3)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}
+              whileHover={{
+                backgroundColor: 'rgba(11, 11, 15, 0.7)',
+                scale: 1.05,
+                borderColor: 'var(--color-accent)'
+              }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Previous image"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </motion.button>
+
+            {/* Next button */}
+            <motion.button
+              onClick={goToNext}
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 p-2.5 md:p-3 rounded-full transition-all z-20"
+              style={{
+                backgroundColor: 'rgba(11, 11, 15, 0.3)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}
+              whileHover={{
+                backgroundColor: 'rgba(11, 11, 15, 0.7)',
+                scale: 1.05,
+                borderColor: 'var(--color-accent)'
+              }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Next image"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </motion.button>
+
+            {/* Dots indicator */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+              {images.map((_, idx) => (
+                <motion.button
+                  key={idx}
+                  onClick={() => {
+                    setDirection(idx > currentIndex ? 1 : -1);
+                    setCurrentIndex(idx);
+                  }}
+                  className="rounded-full transition-all"
+                  style={{
+                    width: idx === currentIndex ? '24px' : '8px',
+                    height: '8px',
+                    backgroundColor: idx === currentIndex ? 'var(--color-accent)' : 'rgba(255, 255, 255, 0.3)'
+                  }}
+                  whileHover={{ 
+                    backgroundColor: idx === currentIndex ? 'var(--color-accent)' : 'rgba(255, 255, 255, 0.5)'
+                  }}
+                  aria-label={`Go to image ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Modal component
 function ProjectModal({ 
   project, 
@@ -112,8 +409,15 @@ function ProjectModal({
   project: ProjectData | null; 
   onClose: () => void;
 }) {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
   useEffect(() => {
     if (!project) return;
+    
+    // Check if mobile for drag functionality
+    setIsMobile(window.innerWidth < 768);
+    setIsClosing(false);
     
     // Lock body scroll and prevent width shift
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -123,7 +427,7 @@ function ProjectModal({
     
     // ESC key handler
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     
     window.addEventListener('keydown', handleEsc);
@@ -134,47 +438,60 @@ function ProjectModal({
       document.documentElement.style.overflow = '';
       window.removeEventListener('keydown', handleEsc);
     };
-  }, [project, onClose]);
+  }, [project]);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Match the transition duration
+  };
   
   if (!project) return null;
   
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
-        className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 overflow-hidden"
-        style={{ 
-          backgroundColor: 'rgba(11, 11, 15, 0.9)',
-          backdropFilter: 'blur(8px)',
-          width: '100vw',
-          maxWidth: '100vw'
-        }}
-        onClick={onClose}
-      >
+    <AnimatePresence mode="wait">
+      {!isClosing && (
         <motion.div
-          initial={{ opacity: 0, y: '100%' }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: '100%' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
-          onClick={(e) => e.stopPropagation()}
-          className="w-full md:max-w-4xl h-[90vh] md:h-auto md:max-h-[85vh] overflow-y-auto overflow-x-hidden rounded-t-3xl md:rounded-2xl"
+          className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 overflow-hidden"
           style={{ 
-            backgroundColor: 'var(--color-bg-secondary)',
-            borderTop: '2px solid var(--color-border-subtle)',
-            boxShadow: '0 -4px 40px rgba(0, 0, 0, 0.5)',
-            maxWidth: '100vw'
+            backgroundColor: 'rgba(11, 11, 15, 0.9)',
+            backdropFilter: 'blur(8px)'
           }}
+          onClick={handleClose}
         >
+          <motion.div
+            initial={{ opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '100%' }}
+            transition={{ duration: 0.3, ease: [0.2, 0.0, 0.0, 1] }}
+            drag={isMobile ? "y" : false}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.5 }}
+            onDragEnd={(_, info) => {
+              if (isMobile && (info.offset.y > 100 || info.velocity.y > 500)) {
+                handleClose();
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full md:max-w-3xl h-[90vh] md:h-auto md:max-h-[85vh] overflow-y-auto overflow-x-hidden rounded-t-3xl md:rounded-2xl"
+            style={{ 
+              backgroundColor: 'var(--color-bg-secondary)',
+              borderTop: '2px solid var(--color-border-subtle)',
+              boxShadow: '0 -4px 40px rgba(0, 0, 0, 0.5)'
+            }}
+          >
           <div className="sticky top-0 z-10 px-4 py-3 md:hidden flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-secondary)', borderBottom: '1px solid var(--color-border-subtle)' }}>
             <div className="w-12 h-1 rounded-full" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
           </div>
           <div className="p-5 md:p-10">
             {/* Close button */}
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="mb-6 text-sm flex items-center gap-2 transition-colors"
               style={{ color: 'var(--color-text-secondary)' }}
               onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
@@ -217,48 +534,9 @@ function ProjectModal({
               </ul>
             </div>
             
-            {/* Visual Artifact */}
-            {project.id === 'emr-platform' && (
-              <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
-                <div className="md:rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
-                  <Image
-                    src="/projects/emr/consultationPage.webp"
-                    alt="EMR consultation interface"
-                    width={800}
-                    height={450}
-                    className="w-full h-auto"
-                    style={{ opacity: 0.85 }}
-                  />
-                </div>
-              </div>
-            )}
-            {project.id === 'log-analysis' && (
-              <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
-                <div className="md:rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
-                  <Image
-                    src="/projects/logAnalysis/analysisDashboard.png"
-                    alt="Log analysis dashboard"
-                    width={800}
-                    height={450}
-                    className="w-full h-auto"
-                    style={{ opacity: 0.85 }}
-                  />
-                </div>
-              </div>
-            )}
-            {project.id === 'bill-automation' && (
-              <div className="mb-6 md:mb-8 -mx-5 md:mx-0">
-                <div className="md:rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border-subtle)' }}>
-                  <Image
-                    src="/projects/purchase-automation/PBA2datapreview2.webp"
-                    alt="Bill automation data preview"
-                    width={800}
-                    height={450}
-                    className="w-full h-auto"
-                    style={{ opacity: 0.85 }}
-                  />
-                </div>
-              </div>
+            {/* Visual Artifact - Image Carousel */}
+            {project.images && project.images.length > 0 && (
+              <ImageCarousel images={project.images} />
             )}
 
             {/* Engineering */}
@@ -317,7 +595,408 @@ function ProjectModal({
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
+  );
+}
+
+// Additional Project Modal Component
+function AdditionalProjectModal({ 
+  project, 
+  onClose,
+  originRect
+}: { 
+  project: typeof additionalProjectsData[0] | null; 
+  onClose: () => void;
+  originRect: DOMRect | null;
+}) {
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (!project) return;
+    
+    setIsClosing(false);
+    
+    // Lock body scroll
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+    document.documentElement.style.overflow = 'hidden';
+    
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    
+    window.addEventListener('keydown', handleEsc);
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.documentElement.style.overflow = '';
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, [project]);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 250);
+  };
+  
+  if (!project) return null;
+
+  // Calculate initial position for expand animation
+  const initialStyle = originRect ? {
+    top: originRect.top,
+    left: originRect.left,
+    width: originRect.width,
+    height: originRect.height
+  } : {};
+  
+  return (
+    <AnimatePresence mode="wait">
+      {!isClosing && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden"
+          style={{ 
+            backgroundColor: 'rgba(11, 11, 15, 0.9)',
+            backdropFilter: 'blur(8px)'
+          }}
+          onClick={handleClose}
+        >
+          <motion.div
+            initial={originRect ? {
+              top: originRect.top,
+              left: originRect.left,
+              width: originRect.width,
+              height: originRect.height,
+              position: 'fixed',
+              opacity: 1
+            } : { opacity: 0, scale: 0.95 }}
+            animate={{
+              top: '50%',
+              left: '50%',
+              x: '-50%',
+              y: '-50%',
+              width: 'min(900px, 90vw)',
+              height: 'auto',
+              position: 'fixed',
+              opacity: 1,
+              scale: 1
+            }}
+            exit={originRect ? {
+              top: originRect.top,
+              left: originRect.left,
+              x: 0,
+              y: 0,
+              width: originRect.width,
+              height: originRect.height,
+              opacity: 0
+            } : { opacity: 0, scale: 0.95 }}
+            transition={{ 
+              duration: 0.3,
+              ease: [0.2, 0.0, 0.0, 1]
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onMouseEnter={(e) => e.stopPropagation()}
+            className="max-h-[85vh] overflow-y-auto rounded-2xl"
+            style={{ 
+              backgroundColor: 'var(--color-bg-secondary)',
+              border: '1px solid var(--color-border-subtle)',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            <div className="p-8">
+              {/* Close button */}
+              <button
+                onClick={handleClose}
+                className="mb-6 text-sm flex items-center gap-2 transition-colors"
+                style={{ color: 'var(--color-text-secondary)' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Close
+              </button>
+              
+              {/* Project title */}
+              <h2 className="text-3xl font-bold mb-2 leading-tight">
+                {project.title}
+              </h2>
+              
+              {/* Subtitle */}
+              {project.subtitle && (
+                <p className="text-sm mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+                  {project.subtitle}
+                </p>
+              )}
+              
+              {/* Images */}
+              {project.images && project.images.length > 0 && (
+                <ImageCarousel images={project.images} />
+              )}
+              
+              {/* Overview */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Overview</h3>
+                <p className="text-base leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                  {project.overview}
+                </p>
+              </div>
+
+              {/* Use Case / Context */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Use Case / Context</h3>
+                <ul className="space-y-2">
+                  {project.useCase.map((item, idx) => (
+                    <li key={idx} className="flex gap-2 text-base">
+                      <span style={{ color: 'var(--color-accent)' }}>•</span>
+                      <span style={{ color: 'var(--color-text-secondary)' }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Key Features Delivered */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Key Features Delivered</h3>
+                <ul className="space-y-2">
+                  {project.features.map((item, idx) => (
+                    <li key={idx} className="flex gap-2 text-base">
+                      <span style={{ color: 'var(--color-accent)' }}>•</span>
+                      <span style={{ color: 'var(--color-text-secondary)' }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Role & Ownership */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Role & Ownership</h3>
+                <ul className="space-y-2">
+                  {project.role.map((item, idx) => (
+                    <li key={idx} className="flex gap-2 text-base">
+                      <span style={{ color: 'var(--color-accent)' }}>•</span>
+                      <span style={{ color: 'var(--color-text-secondary)' }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* Tech Stack */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Tech Stack</h3>
+                <div className="flex flex-wrap gap-2">
+                  {project.techStack.map((tech, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1.5 text-sm rounded-lg"
+                      style={{
+                        backgroundColor: 'var(--color-bg-primary)',
+                        color: 'var(--color-text-primary)',
+                        border: '1px solid var(--color-border-subtle)'
+                      }}
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// Other Projects Section Component
+function OtherProjectsSection() {
+  const [hoveredProject, setHoveredProject] = useState<typeof additionalProjectsData[0] | null>(null);
+  const [originRect, setOriginRect] = useState<DOMRect | null>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const handleInteraction = (project: typeof additionalProjectsData[0], index: number) => {
+    if (cardRefs.current[index]) {
+      setOriginRect(cardRefs.current[index]!.getBoundingClientRect());
+      setHoveredProject(project);
+    }
+  };
+
+  return (
+    <>
+      <motion.section 
+        className="px-4 md:px-6 py-20 relative w-full"
+        style={{ backgroundColor: 'var(--color-bg-secondary)' }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ 
+          duration: 0.3, 
+          ease: [0.4, 0.0, 0.2, 1] 
+        }}
+      >
+        <div className="max-w-6xl w-full mx-auto">
+          <motion.div 
+            className="mb-12 md:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Other Work</h2>
+            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
+            <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              Additional real-world applications demonstrating practical solutions and hands-on implementation.
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {additionalProjectsData.map((project, idx) => (
+              <motion.div
+                key={project.id}
+                ref={(el) => { cardRefs.current[idx] = el; }}
+                className="relative p-6 md:p-8 rounded-xl md:rounded-2xl border h-full cursor-pointer group overflow-hidden"
+                style={{ 
+                  backgroundColor: 'var(--color-bg-primary)',
+                  borderColor: 'var(--color-border-subtle)'
+                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.15, duration: 0.5, ease: [0.2, 0.0, 0.0, 1] }}
+                whileHover={{ 
+                  borderColor: 'rgba(94, 234, 212, 0.2)',
+                  boxShadow: '0 8px 20px rgba(94, 234, 212, 0.08)',
+                  transition: { duration: 0.2 }
+                }}
+                onClick={() => handleInteraction(project, idx)}
+              >
+                {/* Gradient glow on hover */}
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(circle at top right, rgba(94, 234, 212, 0.02), transparent 60%)',
+                  }}
+                />
+                
+                {/* Top accent line */}
+                <motion.div 
+                  className="absolute top-0 left-0 h-0.5 rounded-full"
+                  style={{ 
+                    width: '0%',
+                    backgroundColor: 'var(--color-accent)'
+                  }}
+                  whileHover={{ width: '100%' }}
+                  transition={{ duration: 0.2 }}
+                />
+                
+                <div className="flex flex-col h-full min-h-[300px] md:min-h-[320px] relative z-10">
+                  {/* Project number badge */}
+                  <div 
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-lg mb-4"
+                    style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}
+                  >
+                    <span className="text-sm font-bold font-mono" style={{ color: 'var(--color-accent)' }}>
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-xl md:text-2xl font-bold mb-2 leading-tight transition-colors duration-300 group-hover:text-[var(--color-accent)]">
+                    {project.title}
+                  </h3>
+                  {project.subtitle && (
+                    <div className="mb-4">
+                      <span className="text-xs uppercase tracking-wider px-2.5 py-1 rounded-full" style={{ 
+                        color: 'var(--color-accent)',
+                        backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                        border: '1px solid rgba(94, 234, 212, 0.1)'
+                      }}>
+                        {project.subtitle}
+                      </span>
+                    </div>
+                  )}
+                  <p className="text-sm md:text-base mb-6 leading-relaxed flex-grow" style={{ color: 'var(--color-text-secondary)' }}>
+                    {project.description}
+                  </p>
+                  
+                  {/* Tech stack */}
+                  <div className="flex flex-wrap gap-2 mt-auto mb-4">
+                    {project.techStack.slice(0, 4).map((tech, techIdx) => (
+                      <motion.span 
+                        key={techIdx}
+                        className="text-xs px-3 py-1.5 rounded-lg font-medium transition-all duration-300"
+                        style={{ 
+                          backgroundColor: 'rgba(18, 18, 26, 0.6)',
+                          color: 'var(--color-text-secondary)',
+                          border: '1px solid var(--color-border-subtle)'
+                        }}
+                        whileHover={{
+                          scale: 1.05,
+                          borderColor: 'var(--color-accent)',
+                          color: 'var(--color-accent)',
+                          y: -2
+                        }}
+                      >
+                        {tech}
+                      </motion.span>
+                    ))}
+                    {project.techStack.length > 4 && (
+                      <span 
+                        className="text-xs px-3 py-1.5 rounded-lg font-medium"
+                        style={{ 
+                          color: 'var(--color-text-secondary)',
+                          opacity: 0.6
+                        }}
+                      >
+                        +{project.techStack.length - 4}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* View details link */}
+                  <motion.div
+                    className="inline-flex items-center gap-2 text-sm font-medium pt-2"
+                    style={{ color: 'var(--color-accent)' }}
+                    whileHover={{ x: 4 }}
+                  >
+                    <span>View details</span>
+                    <motion.svg 
+                      className="w-4 h-4"
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                      animate={{ x: [0, 3, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </motion.svg>
+                  </motion.div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {hoveredProject && (
+        <AdditionalProjectModal 
+          project={hoveredProject}
+          onClose={() => setHoveredProject(null)}
+          originRect={originRect}
+        />
+      )}
+    </>
   );
 }
 
@@ -373,29 +1052,45 @@ function Project({
   return (
     <motion.div 
       ref={ref}
-      className="min-h-[40vh] md:min-h-[70vh] flex flex-col md:flex-row md:items-center py-8 md:py-12 cursor-pointer group relative"
+      className="min-h-[40vh] md:min-h-[70vh] flex flex-col md:flex-row md:items-center py-8 md:py-12 cursor-pointer group relative mb-8 md:mb-12"
       style={{ 
         opacity,
         scale
       }}
       onClick={onClick}
-      whileHover={{ 
-        transition: { duration: 0.2 }
+      initial="initial"
+      whileHover="hover"
+      variants={{
+        initial: {},
+        hover: {}
       }}
     >
       {/* Hover glow effect */}
       <motion.div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className="absolute inset-0 rounded-2xl md:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at center, rgba(94, 234, 212, 0.03), transparent 70%)',
-          filter: 'blur(20px)'
+          background: 'radial-gradient(circle at center, rgba(94, 234, 212, 0.05), transparent 70%)',
+          filter: 'blur(30px)'
         }}
       />
       
-      <div className="md:w-24 mb-6 md:mb-0 relative z-10">
-        <div className="text-sm font-mono" style={{ color: 'var(--color-text-secondary)' }}>{index}</div>
+      <div className="md:w-32 mb-6 md:mb-0 relative z-10">
+        <div className="relative inline-block">
+          <div 
+            className="text-lg md:text-xl font-bold font-mono inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl transition-all duration-300 relative"
+            style={{ 
+              color: 'var(--color-accent)',
+              border: '1px solid var(--color-border-subtle)',
+              backgroundColor: 'var(--color-bg-primary)'
+            }}
+          >
+            <span className="relative z-10">
+              {index}
+            </span>
+          </div>
+        </div>
       </div>
-      <div className="flex-1 md:pl-12 relative z-10">
+      <div className="flex-1 md:pl-8 relative z-10">
         {children}
       </div>
     </motion.div>
@@ -441,10 +1136,25 @@ export default function Home() {
   };
   
   return (
-    <div>
+    <div suppressHydrationWarning>
+      {/* Hidden preload images for all projects */}
+      <div style={{ display: 'none' }} aria-hidden="true" suppressHydrationWarning>
+        {projectsData.map((project) => 
+          project.images?.map((imageSrc, idx) => (
+            <Image
+              key={`${project.id}-${idx}`}
+              src={imageSrc}
+              alt=""
+              width={800}
+              height={450}
+            />
+          ))
+        )}
+      </div>
+
       {/* Hero Section */}
       <motion.section 
-        className="hero-section min-h-screen flex items-center justify-center px-4 md:px-6 py-20 relative overflow-hidden w-full"
+        className="hero-section min-h-screen flex items-center justify-center px-4 md:px-6 py-20 md:py-24 relative overflow-hidden w-full"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
@@ -475,17 +1185,22 @@ export default function Home() {
           {/* Portrait - Above text on mobile, right side on desktop */}
           <div className="order-1 md:order-2 flex justify-center md:justify-end">
             <motion.div 
-              className="w-64 h-80 md:w-80 md:h-96 rounded-2xl overflow-hidden relative"
+              className="w-72 h-80 sm:w-80 sm:h-96 md:w-80 md:h-[420px] lg:w-96 lg:h-[480px] rounded-2xl md:rounded-3xl overflow-hidden relative"
               style={{ 
                 backgroundColor: 'var(--color-bg-secondary)',
                 border: '1px solid var(--color-border-subtle)',
-                boxShadow: '0 0 60px rgba(94, 234, 212, 0.1)'
+                boxShadow: '0 0 20px rgba(94, 234, 212, 0.04)'
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ 
+                opacity: 1, 
+                y: 0,
               }}
               whileHover={{ 
                 scale: 1.02,
-                boxShadow: '0 0 80px rgba(94, 234, 212, 0.15)'
+                boxShadow: '0 0 30px rgba(94, 234, 212, 0.08)'
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.5 }}
             >
               <Image
                 src="/portfolioProfile.png"
@@ -493,16 +1208,24 @@ export default function Home() {
                 fill
                 className="object-cover"
                 priority
-                sizes="(max-width: 768px) 256px, 320px"
+                sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, (max-width: 1024px) 320px, 384px"
+              />
+              {/* Accent border glow */}
+              <div 
+                className="absolute inset-0 rounded-2xl md:rounded-3xl pointer-events-none"
+                style={{
+                  boxShadow: 'inset 0 0 20px rgba(94, 234, 212, 0.02)',
+                  border: '1px solid rgba(94, 234, 212, 0.08)'
+                }}
               />
             </motion.div>
           </div>
 
           {/* Text Content */}
-          <div className="order-2 md:order-1">
+          <div className="order-2 md:order-1 space-y-6 md:space-y-0">
             {/* Intro line */}
             <motion.p 
-              className="text-sm md:text-base mb-4" 
+              className="text-base md:text-lg mb-3 md:mb-4 font-medium" 
               style={{ color: 'var(--color-text-secondary)' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -513,7 +1236,7 @@ export default function Home() {
 
             {/* Accent line */}
             <motion.div 
-              className="h-px mb-6 bg-gradient-to-r from-transparent via-current to-transparent"
+              className="h-px mb-6 md:mb-8 bg-gradient-to-r from-transparent via-current to-transparent"
               style={{ color: 'var(--color-accent)', width: '120px' }}
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: '120px', opacity: 0.6 }}
@@ -525,7 +1248,7 @@ export default function Home() {
             />
             
             <motion.h1 
-              className="text-3xl md:text-5xl lg:text-5xl font-bold mb-6 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold mb-6 md:mb-8 leading-tight tracking-tight"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
@@ -534,7 +1257,7 @@ export default function Home() {
             </motion.h1>
             
             <motion.p 
-              className="text-base md:text-xl mb-8 leading-relaxed" 
+              className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed max-w-2xl" 
               style={{ color: 'var(--color-text-secondary)' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -545,8 +1268,8 @@ export default function Home() {
             </motion.p>
             
             <motion.p 
-              className="text-sm md:text-lg mb-10 md:mb-12 italic" 
-              style={{ color: 'var(--color-text-secondary)' }}
+              className="text-base md:text-lg mb-8 md:mb-10 italic font-light" 
+              style={{ color: 'var(--color-accent)' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.4 }}
@@ -554,28 +1277,115 @@ export default function Home() {
               Clarity before complexity.
             </motion.p>
             
+            {/* Social Links */}
             <motion.div 
-              className="flex flex-col sm:flex-row gap-3 md:gap-4"
+              className="flex items-center gap-4 mb-8 md:mb-10"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.4 }}
             >
+              <motion.a
+                href="https://github.com/Kaushal2710"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg transition-all"
+                style={{ 
+                  border: '1px solid var(--color-border-subtle)',
+                  color: 'var(--color-text-secondary)'
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  borderColor: 'var(--color-accent)',
+                  color: 'var(--color-accent)',
+                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
+                }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="GitHub Profile"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+              </motion.a>
+              <motion.a
+                href="https://www.linkedin.com/in/kaushal-b33a021ba"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2.5 rounded-lg transition-all"
+                style={{ 
+                  border: '1px solid var(--color-border-subtle)',
+                  color: 'var(--color-text-secondary)'
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  borderColor: 'var(--color-accent)',
+                  color: 'var(--color-accent)',
+                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
+                }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="LinkedIn Profile"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </motion.a>
+              <motion.a
+                href="mailto:kaushalmishra.me@gmail.com"
+                className="p-2.5 rounded-lg transition-all"
+                style={{ 
+                  border: '1px solid var(--color-border-subtle)',
+                  color: 'var(--color-text-secondary)'
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  borderColor: 'var(--color-accent)',
+                  color: 'var(--color-accent)',
+                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
+                }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Email"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </motion.a>
+            </motion.div>
+            
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-3 md:gap-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            >
               <motion.button 
-                className="px-5 md:px-6 py-2.5 md:py-3 rounded-lg font-medium relative overflow-hidden group text-sm md:text-base" 
+                onClick={() => {
+                  const projectsSection = document.querySelector('.projects-section');
+                  projectsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium relative overflow-hidden group text-sm md:text-base shadow-lg" 
                 style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-bg-primary)' }}
-                whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(94, 234, 212, 0.3)' }}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(94, 234, 212, 0.4)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="relative z-10">View Projects</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-300" style={{ transform: 'translateX(-100%)' }} />
+                <span className="relative z-10 font-semibold">View Projects</span>
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
+                  initial={{ x: '-100%', opacity: 0 }}
+                  whileHover={{ x: '100%', opacity: 0.2 }}
+                  transition={{ duration: 0.6 }}
+                />
               </motion.button>
               <motion.button 
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-6 py-3 rounded-lg font-medium" 
-                style={{ border: '1px solid var(--color-border-subtle)', color: 'var(--color-text-primary)' }}
+                className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium text-sm md:text-base" 
+                style={{ 
+                  border: '1px solid var(--color-border-subtle)', 
+                  color: 'var(--color-text-primary)',
+                  backgroundColor: 'transparent'
+                }}
                 whileHover={{ 
                   scale: 1.02,
                   borderColor: 'var(--color-accent)',
+                  backgroundColor: 'rgba(94, 234, 212, 0.05)',
                   boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
                 }}
                 whileTap={{ scale: 0.98 }}
@@ -585,10 +1395,37 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
+        
+        {/* Scroll Indicator */}
+        <motion.div 
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-10"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
+          onClick={() => {
+            const projectsSection = document.querySelector('.projects-section');
+            projectsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }}
+          whileHover={{ scale: 1.1 }}
+        >
+          <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>Scroll</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ 
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <svg className="w-5 h-5" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </motion.div>
+        </motion.div>
       </motion.section>
 
       {/* Projects Section */}
-      <section className="relative w-full" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
+      <section className="projects-section relative w-full" style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
         {/* Top gradient transition */}
         <div 
           className="absolute top-0 left-0 right-0 h-32 pointer-events-none"
@@ -610,25 +1447,19 @@ export default function Home() {
         {/* Subtle accent glow */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-[0.02] blur-3xl pointer-events-none" style={{ backgroundColor: 'var(--color-accent)' }} />
         
-        <div className="max-w-6xl w-full mx-auto px-6 py-20 relative">
+        <div className="max-w-6xl w-full mx-auto px-4 md:px-6 py-20 md:py-28 relative">
           <motion.div
+            className="mb-16 md:mb-20"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Projects</h2>
-            <motion.div 
-              className="h-1 rounded-full mb-12 md:mb-16"
-              style={{ 
-                background: 'linear-gradient(90deg, var(--color-accent), transparent)',
-                width: '80px'
-              }}
-              initial={{ width: 0 }}
-              whileInView={{ width: '80px' }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
+            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
+            <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              A selection of systems and tools I've built, spanning healthcare platforms, AI infrastructure, and business automation.
+            </p>
           </motion.div>
           
           {projectsData.map((project, idx) => (
@@ -643,64 +1474,95 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className="space-y-4 md:space-y-5"
               >
-                <div className="mb-3">
-                  <span className="text-xs font-mono" style={{ color: 'var(--color-text-secondary)', opacity: 0.6 }}>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs md:text-sm font-mono uppercase tracking-wider px-3 py-1 rounded-full" style={{ 
+                    color: 'var(--color-accent)', 
+                    backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                    border: '1px solid rgba(94, 234, 212, 0.2)'
+                  }}>
                     {project.domain}
                   </span>
                 </div>
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-4 group-hover:text-accent transition-colors">{project.title}</h3>
-                <p className="text-base md:text-lg mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-                  {project.problem.substring(0, 120)}...
+                <div className="relative inline-block mb-3 md:mb-4">
+                  <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold leading-tight tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+                    {project.title}
+                  </h3>
+                  <motion.div
+                    className="absolute bottom-0 left-0 h-[2px] rounded-full"
+                    style={{ 
+                      backgroundColor: 'var(--color-accent)',
+                      width: '0%'
+                    }}
+                    variants={{
+                      initial: { width: '0%' },
+                      hover: { width: '100%' }
+                    }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  />
+                </div>
+                <p className="text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl" style={{ color: 'var(--color-text-secondary)' }}>
+                  {project.problem.substring(0, 150)}...
                 </p>
                 
-                {/* Tech stack with pills */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.techStack.slice(0, 4).map((tech, techIdx) => (
-                    <motion.span
+                {/* Tech stack with enhanced pills */}
+                <div className="flex flex-wrap gap-2 md:gap-2.5 pt-2">
+                  {project.techStack.slice(0, 5).map((tech, techIdx) => (
+                    <span
                       key={techIdx}
-                      className="px-3 py-1 text-xs rounded-full"
+                      className="px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-lg font-medium"
                       style={{ 
-                        backgroundColor: 'var(--color-bg-primary)',
+                        backgroundColor: 'rgba(18, 18, 26, 0.8)',
                         color: 'var(--color-text-secondary)',
-                        border: '1px solid var(--color-border-subtle)'
-                      }}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.3, delay: idx * 0.1 + techIdx * 0.05 }}
-                      whileHover={{ 
-                        scale: 1.05,
-                        borderColor: 'var(--color-text-secondary)'
+                        border: '1px solid var(--color-border-subtle)',
+                        backdropFilter: 'blur(8px)'
                       }}
                     >
                       {tech}
-                    </motion.span>
+                    </span>
                   ))}
+                  {project.techStack.length > 5 && (
+                    <span className="px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-lg" style={{ 
+                      color: 'var(--color-text-secondary)',
+                      opacity: 0.5
+                    }}>
+                      +{project.techStack.length - 5} more
+                    </span>
+                  )}
                 </div>
                 
-                <motion.span 
-                  className="text-sm md:text-base view-details-link inline-flex items-center gap-2" 
-                  style={{ color: 'var(--color-accent)' }}
+                <motion.div
+                  className="inline-flex items-center gap-2 pt-2 md:pt-4" 
                   whileHover={{ x: 4 }}
                 >
-                  View details
-                  <motion.span
+                  <span className="text-sm md:text-base font-medium" style={{ color: 'var(--color-accent)' }}>
+                    View details
+                  </span>
+                  <motion.svg 
+                    className="w-5 h-5 md:w-6 md:h-6"
+                    style={{ color: 'var(--color-accent)' }}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
                     animate={{ x: [0, 4, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    →
-                  </motion.span>
-                </motion.span>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </motion.svg>
+                </motion.div>
               </motion.div>
             </Project>
           ))}
         </div>
       </section>
 
+      {/* Other Selected Projects Section */}
+      <OtherProjectsSection />
+
       {/* Core Competencies Section */}
       <motion.section 
-        className="px-4 md:px-6 py-24 relative w-full"
+        className="px-4 md:px-6 py-12 md:py-16 relative w-full min-h-screen flex items-center"
         style={{ backgroundColor: 'var(--color-bg-primary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -728,125 +1590,339 @@ export default function Home() {
           }}
         />
         
+        {/* Animated gradient orbs */}
+        <motion.div 
+          className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full opacity-[0.03] blur-3xl pointer-events-none"
+          style={{ backgroundColor: 'var(--color-accent)' }}
+          animate={{ 
+            x: [0, 30, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
         <div className="max-w-6xl w-full mx-auto relative z-10">
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Core Competencies</h2>
-            <div className="h-px w-16 bg-gradient-to-r from-current to-transparent opacity-20 mb-6" />
-            
-            <p className="text-base md:text-lg max-w-3xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              I focus on understanding systems deeply before building them,
-              so the solutions are scalable, reliable, and easy to use.
+          <motion.div 
+            className="mb-8 md:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Core Competencies</h2>
+            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
+            <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              I focus on understanding systems deeply before building them, so the solutions are scalable, reliable, and easy to use.
             </p>
-          </div>
+          </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {/* Pillar 1 */}
-            <div className="pillar-item p-6 rounded-xl" style={{ border: '1px solid var(--color-border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.01)' }}>
-              <h3 className="text-xl md:text-2xl font-semibold mb-5">
-                System Design & Architecture
-              </h3>
-              <ul className="space-y-3.5">
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Designing clear data and control flows instead of tightly coupled logic
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Making conscious trade-offs between scalability, simplicity, and performance
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Structuring backend services and APIs for long-term maintainability
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <motion.div 
+              className="group relative p-5 md:p-6 rounded-xl overflow-hidden" 
+              style={{ 
+                border: '1px solid var(--color-border-subtle)', 
+                backgroundColor: 'rgba(18, 18, 26, 0.4)'
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              whileHover={{ 
+                borderColor: 'rgba(94, 234, 212, 0.15)',
+                boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                transition: { duration: 0.2 }
+              }}
+            >
+              {/* Top accent line */}
+              <motion.div 
+                className="absolute top-0 left-0 h-0.5 rounded-full"
+                style={{ 
+                  width: '0%',
+                  backgroundColor: 'var(--color-accent)'
+                }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              {/* Gradient overlay on hover */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle at top left, rgba(94, 234, 212, 0.015), transparent 60%)'
+                }}
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-start gap-3 mb-4">
+                  <motion.div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    <svg className="w-5 h-5" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </motion.div>
+                  <h3 className="text-lg md:text-xl font-bold leading-tight flex-1">
+                    System Design & Architecture
+                  </h3>
+                </div>
+                <ul className="space-y-2.5">
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Designing clear data and control flows instead of tightly coupled logic
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Making conscious trade-offs between scalability, simplicity, and performance
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Structuring backend services and APIs for long-term maintainability
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
 
             {/* Pillar 2 */}
-            <div className="pillar-item p-6 rounded-xl" style={{ border: '1px solid var(--color-border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.01)' }}>
-              <h3 className="text-xl md:text-2xl font-semibold mb-5">
-                AI / ML Systems (Applied)
-              </h3>
-              <ul className="space-y-3.5">
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Treating ML models as system components, not black boxes
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Handling latency, accuracy trade-offs, and failure cases in real-world usage
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Evaluating models using meaningful metrics instead of raw accuracy alone
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <motion.div 
+              className="group relative p-5 md:p-6 rounded-xl overflow-hidden" 
+              style={{ 
+                border: '1px solid var(--color-border-subtle)', 
+                backgroundColor: 'rgba(18, 18, 26, 0.4)'
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ 
+                borderColor: 'rgba(94, 234, 212, 0.15)',
+                boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                transition: { duration: 0.2 }
+              }}
+            >
+              <motion.div 
+                className="absolute top-0 left-0 h-0.5 rounded-full"
+                style={{ 
+                  width: '0%',
+                  backgroundColor: 'var(--color-accent)'
+                }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle at top left, rgba(94, 234, 212, 0.015), transparent 60%)'
+                }}
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-start gap-3 mb-4">
+                  <motion.div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    <svg className="w-5 h-5" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </motion.div>
+                  <h3 className="text-lg md:text-xl font-bold leading-tight flex-1">
+                    AI / ML Systems (Applied)
+                  </h3>
+                </div>
+                <ul className="space-y-2.5">
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Treating ML models as system components, not black boxes
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Handling latency, accuracy trade-offs, and failure cases in real-world usage
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Evaluating models using meaningful metrics instead of raw accuracy alone
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
 
             {/* Pillar 3 */}
-            <div className="pillar-item p-6 rounded-xl" style={{ border: '1px solid var(--color-border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.01)' }}>
-              <h3 className="text-xl md:text-2xl font-semibold mb-5">
-                Automation & Optimization
-              </h3>
-              <ul className="space-y-3.5">
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Identifying repetitive or error-prone workflows and automating them
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Designing systems that fail gracefully and are easy to debug
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Optimizing for reliability and clarity before premature performance gains
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <motion.div 
+              className="group relative p-5 md:p-6 rounded-xl overflow-hidden" 
+              style={{ 
+                border: '1px solid var(--color-border-subtle)', 
+                backgroundColor: 'rgba(18, 18, 26, 0.4)'
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ 
+                borderColor: 'rgba(94, 234, 212, 0.15)',
+                boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                transition: { duration: 0.2 }
+              }}
+            >
+              <motion.div 
+                className="absolute top-0 left-0 h-0.5 rounded-full"
+                style={{ 
+                  width: '0%',
+                  backgroundColor: 'var(--color-accent)'
+                }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle at top left, rgba(94, 234, 212, 0.015), transparent 60%)'
+                }}
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-start gap-3 mb-4">
+                  <motion.div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    <svg className="w-5 h-5" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </motion.div>
+                  <h3 className="text-lg md:text-xl font-bold leading-tight flex-1">
+                    Automation & Optimization
+                  </h3>
+                </div>
+                <ul className="space-y-2.5">
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Identifying repetitive or error-prone workflows and automating them
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Designing systems that fail gracefully and are easy to debug
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Optimizing for reliability and clarity before premature performance gains
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
 
             {/* Pillar 4 */}
-            <div className="pillar-item p-6 rounded-xl" style={{ border: '1px solid var(--color-border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.01)' }}>
-              <h3 className="text-xl md:text-2xl font-semibold mb-5">
-                Frontend Engineering & UX
-              </h3>
-              <ul className="space-y-3.5">
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Managing complex state without compromising user experience
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Designing interactions that feel intentional, not decorative
-                  </span>
-                </li>
-                <li className="flex gap-3">
-                  <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>
-                    Balancing performance, accessibility, and visual clarity
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <motion.div 
+              className="group relative p-5 md:p-6 rounded-xl overflow-hidden" 
+              style={{ 
+                border: '1px solid var(--color-border-subtle)', 
+                backgroundColor: 'rgba(18, 18, 26, 0.4)'
+              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ 
+                borderColor: 'rgba(94, 234, 212, 0.15)',
+                boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                transition: { duration: 0.2 }
+              }}
+            >
+              <motion.div 
+                className="absolute top-0 left-0 h-0.5 rounded-full"
+                style={{ 
+                  width: '0%',
+                  backgroundColor: 'var(--color-accent)'
+                }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+              
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle at top left, rgba(94, 234, 212, 0.015), transparent 60%)'
+                }}
+              />
+              
+              <div className="relative z-10">
+                <div className="flex items-start gap-3 mb-4">
+                  <motion.div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.05)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    <svg className="w-5 h-5" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </motion.div>
+                  <h3 className="text-lg md:text-xl font-bold leading-tight flex-1">
+                    Frontend Engineering & UX
+                  </h3>
+                </div>
+                <ul className="space-y-2.5">
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Managing complex state without compromising user experience
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Designing interactions that feel intentional, not decorative
+                    </span>
+                  </li>
+                  <li className="flex gap-2.5 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Balancing performance, accessibility, and visual clarity
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </motion.div>
           </div>
         </div>
       </motion.section>
@@ -885,74 +1961,161 @@ export default function Home() {
         <div className="absolute top-1/3 right-1/4 w-96 h-96 rounded-full opacity-[0.02] blur-3xl pointer-events-none" style={{ backgroundColor: 'var(--color-accent)' }} />
         
         <div className="max-w-6xl w-full mx-auto relative z-10">
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Professional Background</h2>
-            <div className="h-px w-16 bg-gradient-to-r from-current to-transparent opacity-20 mb-6" />
-          </div>
+          <motion.div 
+            className="mb-16 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Professional Background</h2>
+            <div className="h-px w-20 bg-gradient-to-r from-transparent via-current to-transparent opacity-30 mb-6 mx-auto" style={{ color: 'var(--color-accent)' }} />
+            <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-text-secondary)' }}>
+              My journey in software engineering and research
+            </p>
+          </motion.div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Professional Experience */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
               <h3 className="text-2xl font-semibold mb-8" style={{ color: 'var(--color-text-primary)' }}>Experience</h3>
               
-              <div className="relative pl-6 border-l" style={{ borderColor: 'var(--color-border-subtle)' }}>
-                {/* Timeline dot */}
-                <div className="absolute left-0 top-1 w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-text-secondary)', transform: 'translateX(-5px)' }} />
+              <motion.div 
+                className="relative p-6 rounded-xl" 
+                style={{ 
+                  border: '1px solid var(--color-border-subtle)',
+                  backgroundColor: 'rgba(18, 18, 26, 0.4)'
+                }}
+                whileHover={{ 
+                  borderColor: 'rgba(94, 234, 212, 0.15)',
+                  boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                  transition: { duration: 0.2 }
+                }}
+              >
+                {/* Timeline accent */}
+                <div className="absolute left-0 top-6 w-1 h-12 rounded-full" style={{ backgroundColor: 'var(--color-accent)', opacity: 0.3 }} />
                 
-                <div className="pb-8">
-                  <div className="mb-4">
-                    <p className="text-lg font-semibold mb-1">Software Engineering Intern</p>
-                    <p className="text-base mb-1" style={{ color: 'var(--color-text-secondary)' }}>Tark Technologies</p>
-                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)', opacity: 0.7 }}>2024</p>
+                <div className="mb-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <p className="text-lg font-semibold mb-1">Software Engineering Intern</p>
+                      <p className="text-base mb-1" style={{ color: 'var(--color-accent)' }}>Tark Technologies</p>
+                    </div>
+                    <span className="text-sm px-3 py-1 rounded-full" style={{ 
+                      color: 'var(--color-accent)',
+                      backgroundColor: 'rgba(94, 234, 212, 0.1)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}>2024</span>
                   </div>
-                  
-                  <ul className="space-y-3">
-                    <li className="flex gap-3">
-                      <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                      <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                        Designed and implemented a billing engine using object-oriented principles and SOLID design patterns
-                      </span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                      <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                        Focused on scalable architecture and maintainable code structure
-                      </span>
-                    </li>
-                    <li className="flex gap-3">
-                      <span style={{ color: 'var(--color-text-secondary)', minWidth: '4px' }}>·</span>
-                      <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                        Developed debugging and optimization skills through production system work
-                      </span>
-                    </li>
-                  </ul>
                 </div>
-              </div>
-            </div>
+                
+                <ul className="space-y-3">
+                  <li className="flex gap-3 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Designed and implemented a billing engine using object-oriented principles and SOLID design patterns
+                    </span>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Focused on scalable architecture and maintainable code structure
+                    </span>
+                  </li>
+                  <li className="flex gap-3 items-start">
+                    <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
+                    <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                      Developed debugging and optimization skills through production system work
+                    </span>
+                  </li>
+                </ul>
+              </motion.div>
+            </motion.div>
 
             {/* Credentials Column */}
             <div className="space-y-10">
               {/* Certifications */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
                 <h3 className="text-2xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Certifications</h3>
                 
-                <div className="p-5 rounded-lg" style={{ border: '1px solid var(--color-border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.01)' }}>
-                  <p className="text-base font-medium mb-2">Microsoft Azure AI-900</p>
-                  <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Azure AI Fundamentals</p>
-                </div>
-              </div>
+                <motion.div 
+                  className="p-6 rounded-xl group" 
+                  style={{ 
+                    border: '1px solid var(--color-border-subtle)', 
+                    backgroundColor: 'rgba(18, 18, 26, 0.4)' 
+                  }}
+                  whileHover={{ 
+                    borderColor: 'rgba(94, 234, 212, 0.15)',
+                    boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                    transition: { duration: 0.2 }
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.1)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}>
+                      <svg className="w-6 h-6" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-base font-semibold mb-2">Microsoft Azure AI-900</p>
+                      <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Azure AI Fundamentals</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
 
               {/* Patents & Research */}
-              <div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
                 <h3 className="text-2xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Research & IP</h3>
                 
-                <div className="p-5 rounded-lg" style={{ border: '1px solid var(--color-border-subtle)', backgroundColor: 'rgba(255, 255, 255, 0.01)' }}>
-                  <p className="text-base font-medium mb-2">Patent Application</p>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-                    Novel methodology for real-time log analysis using machine learning
-                  </p>
-                </div>
-              </div>
+                <motion.div 
+                  className="p-6 rounded-xl group" 
+                  style={{ 
+                    border: '1px solid var(--color-border-subtle)', 
+                    backgroundColor: 'rgba(18, 18, 26, 0.4)' 
+                  }}
+                  whileHover={{ 
+                    borderColor: 'rgba(94, 234, 212, 0.15)',
+                    boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
+                    transition: { duration: 0.2 }
+                  }}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{
+                      backgroundColor: 'rgba(94, 234, 212, 0.1)',
+                      border: '1px solid rgba(94, 234, 212, 0.2)'
+                    }}>
+                      <svg className="w-6 h-6" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-base font-semibold mb-2">Patent Application</p>
+                      <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+                        Novel methodology for real-time log analysis using machine learning
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -989,44 +2152,84 @@ export default function Home() {
         />
         
         <div className="max-w-3xl w-full mx-auto relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">About</h2>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">About</h2>
+            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-20 mb-12" style={{ color: 'var(--color-accent)' }} />
+          </motion.div>
           
           {/* Identity line */}
-          <p className="text-xl md:text-2xl font-medium mb-10 leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
-            I build systems by thinking deeply before building quickly.
-          </p>
+          <motion.div
+            className="p-8 rounded-xl mb-10"
+            style={{ 
+              border: '1px solid var(--color-border-subtle)',
+              backgroundColor: 'rgba(18, 18, 26, 0.3)'
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <p className="text-xl md:text-2xl font-medium leading-relaxed text-center" style={{ color: 'var(--color-text-primary)' }}>
+              I build systems by thinking deeply before building quickly.
+            </p>
+          </motion.div>
           
           {/* Explanatory paragraph */}
-          <p className="text-base md:text-lg leading-relaxed mb-12" style={{ color: 'var(--color-text-secondary)' }}>
+          <motion.p 
+            className="text-base md:text-lg leading-relaxed mb-12" 
+            style={{ color: 'var(--color-text-secondary)' }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             I prioritize understanding the problem space and constraints before writing code. 
             Solutions should be clear, maintainable, and built to last—not clever for the sake of complexity. 
             I care deeply about usability and real-world impact, where software reduces friction and handles complexity gracefully.
-          </p>
+          </motion.p>
           
           {/* Working principles */}
-          <div>
-            <h3 className="text-lg font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>How I work</h3>
+          <motion.div
+            className="p-8 rounded-xl"
+            style={{ 
+              border: '1px solid var(--color-border-subtle)',
+              backgroundColor: 'rgba(18, 18, 26, 0.3)'
+            }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <h3 className="text-xl font-semibold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
+              <span className="w-1 h-6 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }}></span>
+              How I work
+            </h3>
             <ul className="space-y-4">
-              <li className="flex gap-3">
-                <span style={{ color: 'var(--color-text-primary)', minWidth: '4px' }}>·</span>
+              <li className="flex gap-3 items-start">
+                <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                 <span className="leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
                   Design systems with clear boundaries and maintainable architecture that teams can reason about
                 </span>
               </li>
-              <li className="flex gap-3">
-                <span style={{ color: 'var(--color-text-primary)', minWidth: '4px' }}>·</span>
+              <li className="flex gap-3 items-start">
+                <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                 <span className="leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
                   Treat user experience as a first-class concern, not an afterthought
                 </span>
               </li>
-              <li className="flex gap-3">
-                <span style={{ color: 'var(--color-text-primary)', minWidth: '4px' }}>·</span>
+              <li className="flex gap-3 items-start">
+                <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                 <span className="leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
                   Engage in direct communication and constructive technical debate to reach better solutions
                 </span>
               </li>
             </ul>
-          </div>
+          </motion.div>
         </div>
       </motion.section>
 
