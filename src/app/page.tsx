@@ -833,7 +833,7 @@ function OtherProjectsSection() {
   return (
     <>
       <motion.section 
-        className="px-4 md:px-6 py-20 relative w-full"
+        className="px-4 md:px-6 py-14 md:py-20 relative w-full"
         style={{ backgroundColor: 'var(--color-bg-secondary)' }}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -845,7 +845,7 @@ function OtherProjectsSection() {
       >
         <div className="max-w-6xl w-full mx-auto">
           <motion.div 
-            className="mb-12 md:mb-16"
+            className="mb-8 md:mb-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -854,7 +854,8 @@ function OtherProjectsSection() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Other Work</h2>
             <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
             <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              Additional real-world applications demonstrating practical solutions and hands-on implementation.
+              <span className="hidden md:inline">Additional real-world applications demonstrating practical solutions and hands-on implementation.</span>
+              <span className="md:hidden">Additional real-world applications.</span>
             </p>
           </motion.div>
           
@@ -863,7 +864,7 @@ function OtherProjectsSection() {
               <motion.div
                 key={project.id}
                 ref={(el) => { cardRefs.current[idx] = el; }}
-                className="relative p-6 md:p-8 rounded-xl md:rounded-2xl border h-full cursor-pointer group overflow-hidden"
+                className="relative p-5 md:p-8 rounded-xl md:rounded-2xl border h-full cursor-pointer group overflow-hidden"
                 style={{ 
                   backgroundColor: 'var(--color-bg-primary)',
                   borderColor: 'var(--color-border-subtle)'
@@ -898,10 +899,10 @@ function OtherProjectsSection() {
                   transition={{ duration: 0.2 }}
                 />
                 
-                <div className="flex flex-col h-full min-h-[300px] md:min-h-[320px] relative z-10">
+                <div className="flex flex-col h-full min-h-[260px] md:min-h-[320px] relative z-10">
                   {/* Project number badge */}
                   <div 
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-lg mb-4"
+                    className="inline-flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg mb-3 md:mb-4"
                     style={{
                       backgroundColor: 'rgba(94, 234, 212, 0.05)',
                       border: '1px solid rgba(94, 234, 212, 0.2)'
@@ -1154,7 +1155,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <motion.section 
-        className="hero-section min-h-screen flex items-center justify-center px-4 md:px-6 py-20 md:py-24 relative overflow-hidden w-full"
+        className="hero-section min-h-screen flex items-center justify-center px-4 md:px-6 py-16 md:py-24 relative overflow-hidden w-full"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
@@ -1162,30 +1163,11 @@ export default function Home() {
           ease: [0.2, 0.0, 0.0, 1] 
         }}
       >
-        {/* Subtle grid overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(94, 234, 212, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(94, 234, 212, 0.1) 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-            zIndex: 0
-          }}
-        />
-        
-        {/* Bottom gradient transition */}
-        <div 
-          className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to bottom, transparent, var(--color-bg-secondary))',
-            zIndex: 1
-          }}
-        />
-        
-        <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center relative z-10">
+        <div className="max-w-6xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-16 items-center relative z-10">
           {/* Portrait - Above text on mobile, right side on desktop */}
           <div className="order-1 md:order-2 flex justify-center md:justify-end">
             <motion.div 
-              className="w-72 h-80 sm:w-80 sm:h-96 md:w-80 md:h-[420px] lg:w-96 lg:h-[480px] rounded-2xl md:rounded-3xl overflow-hidden relative"
+              className="w-64 h-72 sm:w-72 sm:h-80 md:w-80 md:h-[420px] lg:w-96 lg:h-[480px] rounded-2xl md:rounded-3xl overflow-hidden relative"
               style={{ 
                 backgroundColor: 'var(--color-bg-secondary)',
                 border: '1px solid var(--color-border-subtle)',
@@ -1263,8 +1245,8 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.4 }}
             >
-              I build full-stack applications, automation tools, and AI-powered systems
-              with a strong focus on logic, performance, and user experience.
+              <span className="hidden sm:inline">I build full-stack applications, automation tools, and AI-powered systems with a strong focus on logic, performance, and user experience.</span>
+              <span className="sm:hidden">I build full-stack applications and AI-powered systems with focus on performance and user experience.</span>
             </motion.p>
             
             <motion.p 
@@ -1277,96 +1259,24 @@ export default function Home() {
               Clarity before complexity.
             </motion.p>
             
-            {/* Social Links */}
-            <motion.div 
-              className="flex items-center gap-4 mb-8 md:mb-10"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
-            >
-              <motion.a
-                href="https://github.com/Kaushal2710"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2.5 rounded-lg transition-all"
-                style={{ 
-                  border: '1px solid var(--color-border-subtle)',
-                  color: 'var(--color-text-secondary)'
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  borderColor: 'var(--color-accent)',
-                  color: 'var(--color-accent)',
-                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
-                }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="GitHub Profile"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-              </motion.a>
-              <motion.a
-                href="https://www.linkedin.com/in/kaushal-b33a021ba"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2.5 rounded-lg transition-all"
-                style={{ 
-                  border: '1px solid var(--color-border-subtle)',
-                  color: 'var(--color-text-secondary)'
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  borderColor: 'var(--color-accent)',
-                  color: 'var(--color-accent)',
-                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
-                }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="LinkedIn Profile"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                </svg>
-              </motion.a>
-              <motion.a
-                href="mailto:kaushalmishra.me@gmail.com"
-                className="p-2.5 rounded-lg transition-all"
-                style={{ 
-                  border: '1px solid var(--color-border-subtle)',
-                  color: 'var(--color-text-secondary)'
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  borderColor: 'var(--color-accent)',
-                  color: 'var(--color-accent)',
-                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
-                }}
-                whileTap={{ scale: 0.95 }}
-                aria-label="Email"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </motion.a>
-            </motion.div>
+            
             
             <motion.div 
-              className="flex flex-col sm:flex-row gap-3 md:gap-4"
+              className="flex flex-col sm:flex-row gap-2.5 md:gap-4"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.4 }}
             >
               <motion.button 
                 onClick={() => {
-                  const projectsSection = document.querySelector('.projects-section');
-                  projectsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  window.open('/KaushalAmbaliyaResume1.pdf', '_blank');
                 }}
                 className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium relative overflow-hidden group text-sm md:text-base shadow-lg" 
                 style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-bg-primary)' }}
                 whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(94, 234, 212, 0.4)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="relative z-10 font-semibold">View Projects</span>
+                <span className="relative z-10 font-semibold">Resume</span>
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
                   initial={{ x: '-100%', opacity: 0 }}
@@ -1395,33 +1305,6 @@ export default function Home() {
             </motion.div>
           </div>
         </div>
-        
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer z-10"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
-          onClick={() => {
-            const projectsSection = document.querySelector('.projects-section');
-            projectsSection?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }}
-          whileHover={{ scale: 1.1 }}
-        >
-          <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--color-text-secondary)' }}>Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ 
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <svg className="w-5 h-5" style={{ color: 'var(--color-accent)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </motion.section>
 
       {/* Projects Section */}
@@ -1447,9 +1330,9 @@ export default function Home() {
         {/* Subtle accent glow */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-[0.02] blur-3xl pointer-events-none" style={{ backgroundColor: 'var(--color-accent)' }} />
         
-        <div className="max-w-6xl w-full mx-auto px-4 md:px-6 py-20 md:py-28 relative">
+        <div className="max-w-6xl w-full mx-auto px-4 md:px-6 py-16 md:py-28 relative">
           <motion.div
-            className="mb-16 md:mb-20"
+            className="mb-12 md:mb-20"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -1458,7 +1341,8 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects</h2>
             <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
             <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              A selection of systems and tools I've built, spanning healthcare platforms, AI infrastructure, and business automation.
+              <span className="hidden md:inline">A selection of systems and tools I've built, spanning healthcare platforms, AI infrastructure, and business automation.</span>
+              <span className="md:hidden">Systems spanning healthcare, AI, and automation.</span>
             </p>
           </motion.div>
           
@@ -1562,7 +1446,7 @@ export default function Home() {
 
       {/* Core Competencies Section */}
       <motion.section 
-        className="px-4 md:px-6 py-12 md:py-16 relative w-full min-h-screen flex items-center"
+        className="px-4 md:px-6 py-12 md:py-16 relative w-full min-h-0 md:min-h-screen flex items-center"
         style={{ backgroundColor: 'var(--color-bg-primary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -1590,22 +1474,6 @@ export default function Home() {
           }}
         />
         
-        {/* Animated gradient orbs */}
-        <motion.div 
-          className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full opacity-[0.03] blur-3xl pointer-events-none"
-          style={{ backgroundColor: 'var(--color-accent)' }}
-          animate={{ 
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ 
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        
         <div className="max-w-6xl w-full mx-auto relative z-10">
           <motion.div 
             className="mb-8 md:mb-12"
@@ -1617,7 +1485,8 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Core Competencies</h2>
             <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
             <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-              I focus on understanding systems deeply before building them, so the solutions are scalable, reliable, and easy to use.
+              <span className="hidden md:inline">I focus on understanding systems deeply before building them, so the solutions are scalable, reliable, and easy to use.</span>
+              <span className="md:hidden">Building scalable, reliable, and user-friendly solutions.</span>
             </p>
           </motion.div>
           
@@ -1689,7 +1558,7 @@ export default function Home() {
                       Making conscious trade-offs between scalability, simplicity, and performance
                     </span>
                   </li>
-                  <li className="flex gap-2.5 items-start">
+                  <li className="hidden md:flex gap-2.5 items-start">
                     <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                     <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                       Structuring backend services and APIs for long-term maintainability
@@ -1764,7 +1633,7 @@ export default function Home() {
                       Handling latency, accuracy trade-offs, and failure cases in real-world usage
                     </span>
                   </li>
-                  <li className="flex gap-2.5 items-start">
+                  <li className="hidden md:flex gap-2.5 items-start">
                     <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                     <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                       Evaluating models using meaningful metrics instead of raw accuracy alone
@@ -1839,7 +1708,7 @@ export default function Home() {
                       Designing systems that fail gracefully and are easy to debug
                     </span>
                   </li>
-                  <li className="flex gap-2.5 items-start">
+                  <li className="hidden md:flex gap-2.5 items-start">
                     <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                     <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                       Optimizing for reliability and clarity before premature performance gains
@@ -1914,7 +1783,7 @@ export default function Home() {
                       Designing interactions that feel intentional, not decorative
                     </span>
                   </li>
-                  <li className="flex gap-2.5 items-start">
+                  <li className="hidden md:flex gap-2.5 items-start">
                     <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                     <span className="text-xs md:text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                       Balancing performance, accessibility, and visual clarity
@@ -1929,7 +1798,7 @@ export default function Home() {
 
       {/* Professional Background Section */}
       <motion.section 
-        className="px-4 md:px-6 py-24 min-h-screen flex items-center relative w-full"
+        className="px-4 md:px-6 py-16 md:py-24 min-h-0 md:min-h-screen flex items-center relative w-full"
         style={{ backgroundColor: 'var(--color-bg-secondary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -1970,7 +1839,7 @@ export default function Home() {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Professional Background</h2>
             <div className="h-px w-20 bg-gradient-to-r from-transparent via-current to-transparent opacity-30 mb-6 mx-auto" style={{ color: 'var(--color-accent)' }} />
-            <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="text-base md:text-lg max-w-2xl mx-auto hidden md:block" style={{ color: 'var(--color-text-secondary)' }}>
               My journey in software engineering and research
             </p>
           </motion.div>
@@ -2021,13 +1890,13 @@ export default function Home() {
                       Designed and implemented a billing engine using object-oriented principles and SOLID design patterns
                     </span>
                   </li>
-                  <li className="flex gap-3 items-start">
+                  <li className="hidden md:flex gap-3 items-start">
                     <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                     <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                       Focused on scalable architecture and maintainable code structure
                     </span>
                   </li>
-                  <li className="flex gap-3 items-start">
+                  <li className="hidden md:flex gap-3 items-start">
                     <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                     <span className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
                       Developed debugging and optimization skills through production system work
@@ -2123,7 +1992,7 @@ export default function Home() {
 
       {/* About Section */}
       <motion.section 
-        className="px-4 md:px-6 py-20 min-h-screen flex items-center relative w-full"
+        className="px-4 md:px-6 py-16 md:py-20 min-h-0 md:min-h-screen flex items-center relative w-full"
         style={{ backgroundColor: 'var(--color-bg-primary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -2159,12 +2028,12 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">About</h2>
-            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-20 mb-12" style={{ color: 'var(--color-accent)' }} />
+            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-20 mb-8 md:mb-12" style={{ color: 'var(--color-accent)' }} />
           </motion.div>
           
           {/* Identity line */}
           <motion.div
-            className="p-8 rounded-xl mb-10"
+            className="p-6 md:p-8 rounded-xl mb-8 md:mb-10"
             style={{ 
               border: '1px solid var(--color-border-subtle)',
               backgroundColor: 'rgba(18, 18, 26, 0.3)'
@@ -2174,28 +2043,29 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <p className="text-xl md:text-2xl font-medium leading-relaxed text-center" style={{ color: 'var(--color-text-primary)' }}>
+            <p className="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-center" style={{ color: 'var(--color-text-primary)' }}>
               I build systems by thinking deeply before building quickly.
             </p>
           </motion.div>
           
           {/* Explanatory paragraph */}
           <motion.p 
-            className="text-base md:text-lg leading-relaxed mb-12" 
+            className="text-base md:text-lg leading-relaxed mb-8 md:mb-12" 
             style={{ color: 'var(--color-text-secondary)' }}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            I prioritize understanding the problem space and constraints before writing code. 
+            <span className="hidden md:inline">I prioritize understanding the problem space and constraints before writing code. 
             Solutions should be clear, maintainable, and built to last—not clever for the sake of complexity. 
-            I care deeply about usability and real-world impact, where software reduces friction and handles complexity gracefully.
+            I care deeply about usability and real-world impact, where software reduces friction and handles complexity gracefully.</span>
+            <span className="md:hidden">I prioritize understanding problems before coding. Solutions should be clear, maintainable, and built to last—focused on usability and real-world impact.</span>
           </motion.p>
           
           {/* Working principles */}
           <motion.div
-            className="p-8 rounded-xl"
+            className="p-6 md:p-8 rounded-xl"
             style={{ 
               border: '1px solid var(--color-border-subtle)',
               backgroundColor: 'rgba(18, 18, 26, 0.3)'
@@ -2205,7 +2075,7 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="text-xl font-semibold mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
+            <h3 className="text-lg md:text-xl font-semibold mb-5 md:mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
               <span className="w-1 h-6 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }}></span>
               How I work
             </h3>
@@ -2222,7 +2092,7 @@ export default function Home() {
                   Treat user experience as a first-class concern, not an afterthought
                 </span>
               </li>
-              <li className="flex gap-3 items-start">
+              <li className="hidden md:flex gap-3 items-start">
                 <span className="text-xs mt-1" style={{ color: 'var(--color-accent)' }}>▸</span>
                 <span className="leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>
                   Engage in direct communication and constructive technical debate to reach better solutions
@@ -2236,7 +2106,7 @@ export default function Home() {
       {/* Contact Section */}
       <motion.section 
         id="contact"
-        className="px-4 md:px-6 py-24 min-h-screen flex items-center relative overflow-hidden w-full"
+        className="px-4 md:px-6 py-16 md:py-24 min-h-0 md:min-h-screen flex items-center relative overflow-hidden w-full"
         style={{ backgroundColor: 'var(--color-bg-secondary)' }}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -2259,7 +2129,7 @@ export default function Home() {
         <div className="absolute top-1/2 left-1/2 w-[500px] h-[500px] rounded-full opacity-[0.03] blur-3xl pointer-events-none" style={{ backgroundColor: 'var(--color-accent)', transform: 'translate(-50%, -50%)' }} />
         
         <div className="max-w-5xl w-full mx-auto relative z-10">
-          <div className="mb-16 text-center">
+          <div className="mb-10 md:mb-16 text-center">
             <motion.h2 
               className="text-3xl md:text-4xl font-bold mb-4"
               initial={{ opacity: 0, y: 10 }}
@@ -2285,7 +2155,8 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              I'd love to hear from you! Whether you have a project in mind, want to collaborate on something interesting, or just want to say hello — drop me a message below.
+              <span className="hidden md:inline">I'd love to hear from you! Whether you have a project in mind, want to collaborate on something interesting, or just want to say hello — drop me a message below.</span>
+              <span className="md:hidden">Let's connect! Drop me a message below.</span>
             </motion.p>
           </div>
 
