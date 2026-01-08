@@ -39,7 +39,13 @@ const projectsData: ProjectData[] = [
     ],
     techStack: ['React', 'Firebase', 'Firestore', 'Authentication', 'Tailwind CSS'],
     links: [],
-    images: ['/projects/emr/consultationPage.webp']
+    images: [
+      '/projects/emr/consultationPage.png',
+      '/projects/emr/adminDashboard.png',
+      '/projects/emr/doctorDashboard.png',
+      '/projects/emr/receptionistDashboard.png',
+      '/projects/emr/receptionistQueueManagement.png'
+    ]
   },
   {
     id: 'log-analysis',
@@ -62,9 +68,7 @@ const projectsData: ProjectData[] = [
     techStack: ['Python', 'PyTorch', 'TinyBERT', 'Optuna', 'Streamlit', 'BGL Dataset'],
     links: [],
     images: [
-      '/projects/logAnalysis/analysisDashboard.png',
-      '/projects/logAnalysis/LA1Loganalysis1.png',
-      '/projects/logAnalysis/LA3Loganalysis3.png'
+      '/projects/logAnalysis/analysisDashboard.png'
     ]
   },
   {
@@ -111,7 +115,8 @@ const projectsData: ProjectData[] = [
       'Real-time inference with visual and audio feedback'
     ],
     techStack: ['Python', 'TensorFlow', 'Keras', 'MediaPipe', 'OpenCV'],
-    links: []
+    links: [],
+    images: []
   }
 ];
 
@@ -142,7 +147,15 @@ const additionalProjectsData = [
       'Deployed and tested end-to-end'
     ],
     techStack: ['React', 'Firebase', 'Firestore', 'RBAC', 'Tailwind CSS'],
-    images: ['/projects/depot-inventory/cover.webp']
+    images: [
+      '/projects/inventoryOrderManagementForDepot/DMP1.1dashboard1.png',
+      '/projects/inventoryOrderManagementForDepot/DMP1.2dashboard1Light1.png',
+      '/projects/inventoryOrderManagementForDepot/DMP2inventory2.png',
+      '/projects/inventoryOrderManagementForDepot/DMP3inTransit.png',
+      '/projects/inventoryOrderManagementForDepot/DMP4order4.png',
+      '/projects/inventoryOrderManagementForDepot/DMP5partymanagement5.png',
+      '/projects/inventoryOrderManagementForDepot/DMP6pettyexpense6.png'
+    ]
   },
   {
     id: 'ims',
@@ -169,7 +182,13 @@ const additionalProjectsData = [
       'Handled testing and refinements'
     ],
     techStack: ['React', 'SQL', 'Backend APIs'],
-    images: ['/projects/ims/cover.webp']
+    images: [
+      '/projects/inventoryOrderManagementForManufacturer/IMS1rawmaterial1.png',
+      '/projects/inventoryOrderManagementForManufacturer/IMS2productConfig2.png',
+      '/projects/inventoryOrderManagementForManufacturer/IMS3process3.png',
+      '/projects/inventoryOrderManagementForManufacturer/IMS4barcode4.png',
+      '/projects/inventoryOrderManagementForManufacturer/IMS5productDetailswithBatches5.png'
+    ]
   },
   {
     id: 'tidytown',
@@ -196,7 +215,11 @@ const additionalProjectsData = [
       'Iterated based on usability testing'
     ],
     techStack: ['React', 'Firebase', 'ML Models', 'Data Visualization'],
-    images: ['/projects/tidytown/cover.webp']
+    images: [
+      '/projects/tidyTown/TD1dashboard.png',
+      '/projects/tidyTown/TD2tidytownDashboard2.png',
+      '/projects/tidyTown/TS3tidytownSignin3.png'
+    ]
   }
 ];
 
@@ -284,16 +307,20 @@ function ImageCarousel({ images }: { images: string[] }) {
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.2}
+            dragMomentum={false}
             onDragEnd={(_, info) => {
               const swipeThreshold = 50;
-              const swipeVelocityThreshold = 500;
+              const swipeVelocityThreshold = 300;
               
-              if (info.offset.x > swipeThreshold || info.velocity.x > swipeVelocityThreshold) {
-                // Swiped right - go to previous
-                goToPrevious();
-              } else if (info.offset.x < -swipeThreshold || info.velocity.x < -swipeVelocityThreshold) {
-                // Swiped left - go to next
-                goToNext();
+              if (Math.abs(info.offset.x) > Math.abs(info.offset.y * 2)) {
+                // Horizontal swipe detected
+                if (info.offset.x > swipeThreshold || info.velocity.x > swipeVelocityThreshold) {
+                  // Swiped right - go to previous
+                  goToPrevious();
+                } else if (info.offset.x < -swipeThreshold || info.velocity.x < -swipeVelocityThreshold) {
+                  // Swiped left - go to next
+                  goToNext();
+                }
               }
             }}
             className="absolute inset-0"
@@ -411,6 +438,7 @@ function ProjectModal({
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!project) return;
@@ -425,26 +453,56 @@ function ProjectModal({
     document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.documentElement.style.overflow = 'hidden';
     
+    // Add history entry for back button handling
+    window.history.pushState({ modal: true }, '');
+    
+    // Handle browser back button
+    const handlePopState = (e: PopStateEvent) => {
+      handleClose();
+    };
+    
     // ESC key handler
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose();
     };
     
+    window.addEventListener('popstate', handlePopState);
     window.addEventListener('keydown', handleEsc);
     
     return () => {
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
       document.documentElement.style.overflow = '';
+      window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('keydown', handleEsc);
     };
   }, [project]);
 
   const handleClose = () => {
     setIsClosing(true);
+    // Remove the history entry we added
+    if (window.history.state?.modal) {
+      window.history.back();
+    }
     setTimeout(() => {
       onClose();
     }, 300); // Match the transition duration
+  };
+
+  // Handle drag for close - only close if dragging from top of scroll
+  const handleDragEnd = (_: any, info: any) => {
+    if (!isMobile || !scrollContainerRef.current) return;
+    
+    const scrollTop = scrollContainerRef.current.scrollTop;
+    const isDraggingDown = info.offset.y > 0;
+    const dragThreshold = 100;
+    const velocityThreshold = 500;
+    
+    // Only close if at top of scroll and dragging down significantly
+    if (scrollTop === 0 && isDraggingDown && 
+        (info.offset.y > dragThreshold || info.velocity.y > velocityThreshold)) {
+      handleClose();
+    }
   };
   
   if (!project) return null;
@@ -472,23 +530,23 @@ function ProjectModal({
             drag={isMobile ? "y" : false}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.5 }}
-            onDragEnd={(_, info) => {
-              if (isMobile && (info.offset.y > 100 || info.velocity.y > 500)) {
-                handleClose();
-              }
-            }}
+            dragMomentum={false}
+            onDragEnd={handleDragEnd}
             onClick={(e) => e.stopPropagation()}
-            className="w-full md:max-w-3xl h-[90vh] md:h-auto md:max-h-[85vh] overflow-y-auto overflow-x-hidden rounded-t-3xl md:rounded-2xl"
+            className="w-full md:max-w-3xl h-[90vh] md:h-auto md:max-h-[85vh] rounded-t-3xl md:rounded-2xl flex flex-col"
             style={{ 
               backgroundColor: 'var(--color-bg-secondary)',
               borderTop: '2px solid var(--color-border-subtle)',
               boxShadow: '0 -4px 40px rgba(0, 0, 0, 0.5)'
             }}
           >
+          {/* Drag handle for mobile */}
           <div className="sticky top-0 z-10 px-4 py-3 md:hidden flex items-center justify-center" style={{ backgroundColor: 'var(--color-bg-secondary)', borderBottom: '1px solid var(--color-border-subtle)' }}>
             <div className="w-12 h-1 rounded-full" style={{ backgroundColor: 'var(--color-border-subtle)' }} />
           </div>
-          <div className="p-5 md:p-10">
+          
+          {/* Scrollable content */}
+          <div ref={scrollContainerRef} className="overflow-y-auto overflow-x-hidden flex-1 p-5 md:p-10">
             {/* Close button */}
             <button
               onClick={handleClose}
@@ -1103,6 +1161,35 @@ export default function Home() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Handle browser back button navigation
+  useEffect(() => {
+    // Initialize with a state indicating we're on home
+    if (!window.history.state?.pageLoaded) {
+      window.history.replaceState({ pageLoaded: true, position: 'home' }, '');
+    }
+
+    const handlePopState = (e: PopStateEvent) => {
+      // If modal is open, it will handle its own back button
+      // This only handles back when no modal is open
+      if (!activeProject) {
+        const currentState = e.state;
+        
+        // If user presses back and we're not at 'home' state, go to home
+        if (currentState?.position !== 'home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          // Add home state
+          window.history.pushState({ pageLoaded: true, position: 'home' }, '');
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [activeProject]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
