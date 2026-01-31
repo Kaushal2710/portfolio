@@ -228,6 +228,14 @@ function ImageCarousel({ images }: { images: string[] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [maxHeight, setMaxHeight] = useState<number>(450);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   if (!images || images.length === 0) return null;
 
@@ -242,20 +250,29 @@ function ImageCarousel({ images }: { images: string[] }) {
             new Promise<number>((resolve) => {
               const img = new window.Image();
               img.onload = () => {
-                // Calculate height for 800px width (standard)
+                // For mobile, use a reduced height for landscape images
+                // For desktop, use standard calculation
                 const aspectRatio = img.height / img.width;
-                resolve(800 * aspectRatio);
+                const baseWidth = isMobile ? window.innerWidth - 32 : 800;
+                const calculatedHeight = baseWidth * aspectRatio;
+                
+                // On mobile, cap the height for landscape images
+                if (isMobile && aspectRatio < 0.7) {
+                  resolve(Math.min(calculatedHeight, 250));
+                } else {
+                  resolve(calculatedHeight);
+                }
               };
-              img.onerror = () => resolve(450); // fallback
+              img.onerror = () => resolve(isMobile ? 250 : 450); // fallback
               img.src = src;
             })
         )
       );
-      setMaxHeight(Math.max(...heights, 450));
+      setMaxHeight(Math.max(...heights, isMobile ? 250 : 450));
     };
 
     loadImages();
-  }, [images]);
+  }, [images, isMobile]);
 
   const goToPrevious = () => {
     setDirection(-1);
@@ -548,18 +565,22 @@ function ProjectModal({
           {/* Scrollable content */}
           <div ref={scrollContainerRef} className="overflow-y-auto overflow-x-hidden flex-1 p-5 md:p-10">
             {/* Close button */}
-            <button
+            <motion.button
               onClick={handleClose}
-              className="mb-6 text-sm flex items-center gap-2 transition-colors"
+              className="mb-6 text-sm flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
               style={{ color: 'var(--color-text-secondary)' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
+              whileHover={{ 
+                opacity: 0.7,
+                color: 'var(--color-accent)' 
+              }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
               Close
-            </button>
+            </motion.button>
             
             {/* Project title */}
             <h2 className="text-2xl md:text-4xl font-bold mb-2 md:mb-3 leading-tight">
@@ -771,18 +792,22 @@ function AdditionalProjectModal({
           >
             <div className="p-8">
               {/* Close button */}
-              <button
+              <motion.button
                 onClick={handleClose}
-                className="mb-6 text-sm flex items-center gap-2 transition-colors"
+                className="mb-6 text-sm flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={{ color: 'var(--color-text-secondary)' }}
-                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-secondary)'}
+                whileHover={{ 
+                  opacity: 0.7,
+                  color: 'var(--color-accent)' 
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
                 Close
-              </button>
+              </motion.button>
               
               {/* Project title */}
               <h2 className="text-3xl font-bold mb-2 leading-tight">
@@ -902,19 +927,28 @@ function OtherProjectsSection() {
         }}
       >
         <div className="max-w-6xl w-full mx-auto">
-          <motion.div 
-            className="mb-8 md:mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Other Work</h2>
+          <motion.div className="mb-8 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-bold mb-4"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }}
+            >
+              Other Work
+            </motion.h2>
             <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
-            <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            <motion.p 
+              className="text-base md:text-lg max-w-2xl leading-relaxed" 
+              style={{ color: 'var(--color-text-secondary)' }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: [0.4, 0.0, 0.2, 1] }}
+            >
               <span className="hidden md:inline">Additional real-world applications demonstrating practical solutions and hands-on implementation.</span>
               <span className="md:hidden">Additional real-world applications.</span>
-            </p>
+            </motion.p>
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -927,10 +961,10 @@ function OtherProjectsSection() {
                   backgroundColor: 'var(--color-bg-primary)',
                   borderColor: 'var(--color-border-subtle)'
                 }}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.15, duration: 0.5, ease: [0.2, 0.0, 0.0, 1] }}
+                transition={{ duration: 0.45, ease: [0.4, 0.0, 0.2, 1] }}
                 whileHover={{ 
                   borderColor: 'rgba(94, 234, 212, 0.2)',
                   boxShadow: '0 8px 20px rgba(94, 234, 212, 0.08)',
@@ -1028,18 +1062,17 @@ function OtherProjectsSection() {
                     className="inline-flex items-center gap-2 text-sm font-medium pt-2"
                     style={{ color: 'var(--color-accent)' }}
                     whileHover={{ x: 4 }}
+                    transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
                   >
                     <span>View details</span>
-                    <motion.svg 
+                    <svg 
                       className="w-4 h-4"
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
-                      animate={{ x: [0, 3, 0] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </motion.svg>
+                    </svg>
                   </motion.div>
                 </div>
               </motion.div>
@@ -1358,34 +1391,28 @@ export default function Home() {
                 onClick={() => {
                   window.open('/KaushalAmbaliyaResume1.pdf', '_blank');
                 }}
-                className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium relative overflow-hidden group text-sm md:text-base shadow-lg" 
+                className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium relative overflow-hidden text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2" 
                 style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-bg-primary)' }}
-                whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(94, 234, 212, 0.4)' }}
+                whileHover={{ opacity: 0.9 }}
                 whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <span className="relative z-10 font-semibold">Resume</span>
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent"
-                  initial={{ x: '-100%', opacity: 0 }}
-                  whileHover={{ x: '100%', opacity: 0.2 }}
-                  transition={{ duration: 0.6 }}
-                />
               </motion.button>
               <motion.button 
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium text-sm md:text-base" 
+                className="px-6 md:px-8 py-3 md:py-3.5 rounded-lg font-medium text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-offset-2" 
                 style={{ 
                   border: '1px solid var(--color-border-subtle)', 
                   color: 'var(--color-text-primary)',
                   backgroundColor: 'transparent'
                 }}
                 whileHover={{ 
-                  scale: 1.02,
-                  borderColor: 'var(--color-accent)',
-                  backgroundColor: 'rgba(94, 234, 212, 0.05)',
-                  boxShadow: '0 0 20px rgba(94, 234, 212, 0.15)'
+                  opacity: 0.7,
+                  borderColor: 'var(--color-accent)'
                 }}
                 whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 Contact Me
               </motion.button>
@@ -1506,21 +1533,20 @@ export default function Home() {
                 <motion.div
                   className="inline-flex items-center gap-2 pt-2 md:pt-4" 
                   whileHover={{ x: 4 }}
+                  transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
                 >
                   <span className="text-sm md:text-base font-medium" style={{ color: 'var(--color-accent)' }}>
                     View details
                   </span>
-                  <motion.svg 
+                  <svg 
                     className="w-5 h-5 md:w-6 md:h-6"
                     style={{ color: 'var(--color-accent)' }}
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
-                    animate={{ x: [0, 4, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </motion.svg>
+                  </svg>
                 </motion.div>
               </motion.div>
             </Project>
@@ -1562,19 +1588,28 @@ export default function Home() {
         />
         
         <div className="max-w-6xl w-full mx-auto relative z-10">
-          <motion.div 
-            className="mb-8 md:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Core Competencies</h2>
+          <motion.div className="mb-8 md:mb-12">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-bold mb-4"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }}
+            >
+              Core Competencies
+            </motion.h2>
             <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-30 mb-6" style={{ color: 'var(--color-accent)' }} />
-            <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            <motion.p 
+              className="text-base md:text-lg max-w-2xl leading-relaxed" 
+              style={{ color: 'var(--color-text-secondary)' }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, ease: [0.4, 0.0, 0.2, 1] }}
+            >
               <span className="hidden md:inline">I focus on understanding systems deeply before building them, so the solutions are scalable, reliable, and easy to use.</span>
               <span className="md:hidden">Building scalable, reliable, and user-friendly solutions.</span>
-            </p>
+            </motion.p>
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -1662,10 +1697,10 @@ export default function Home() {
                 border: '1px solid var(--color-border-subtle)', 
                 backgroundColor: 'rgba(18, 18, 26, 0.4)'
               }}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
               whileHover={{ 
                 borderColor: 'rgba(94, 234, 212, 0.15)',
                 boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
@@ -1737,10 +1772,10 @@ export default function Home() {
                 border: '1px solid var(--color-border-subtle)', 
                 backgroundColor: 'rgba(18, 18, 26, 0.4)'
               }}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
               whileHover={{ 
                 borderColor: 'rgba(94, 234, 212, 0.15)',
                 boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
@@ -1812,10 +1847,10 @@ export default function Home() {
                 border: '1px solid var(--color-border-subtle)', 
                 backgroundColor: 'rgba(18, 18, 26, 0.4)'
               }}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
               whileHover={{ 
                 borderColor: 'rgba(94, 234, 212, 0.15)',
                 boxShadow: '0 4px 16px rgba(94, 234, 212, 0.05)',
@@ -1997,10 +2032,10 @@ export default function Home() {
             <div className="space-y-10">
               {/* Certifications */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                transition={{ duration: 0.45, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <h3 className="text-2xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Certifications</h3>
                 
@@ -2035,10 +2070,10 @@ export default function Home() {
 
               {/* Patents & Research */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
+                transition={{ duration: 0.45, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <h3 className="text-2xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Research & IP</h3>
                 
@@ -2108,15 +2143,16 @@ export default function Home() {
         />
         
         <div className="max-w-3xl w-full mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold mb-4"
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2, ease: [0.4, 0.0, 0.2, 1] }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">About</h2>
-            <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-20 mb-8 md:mb-12" style={{ color: 'var(--color-accent)' }} />
-          </motion.div>
+            About
+          </motion.h2>
+          <div className="h-px w-20 bg-gradient-to-r from-current to-transparent opacity-20 mb-8 md:mb-12" style={{ color: 'var(--color-accent)' }} />
           
           {/* Identity line */}
           <motion.div
@@ -2125,10 +2161,10 @@ export default function Home() {
               border: '1px solid var(--color-border-subtle)',
               backgroundColor: 'rgba(18, 18, 26, 0.3)'
             }}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
           >
             <p className="text-lg sm:text-xl md:text-2xl font-medium leading-relaxed text-center" style={{ color: 'var(--color-text-primary)' }}>
               I build systems by thinking deeply before building quickly.
@@ -2139,10 +2175,10 @@ export default function Home() {
           <motion.p 
             className="text-base md:text-lg leading-relaxed mb-8 md:mb-12" 
             style={{ color: 'var(--color-text-secondary)' }}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.45, ease: [0.4, 0.0, 0.2, 1] }}
           >
             <span className="hidden md:inline">I prioritize understanding the problem space and constraints before writing code. 
             Solutions should be clear, maintainable, and built to last—not clever for the sake of complexity. 
@@ -2157,10 +2193,10 @@ export default function Home() {
               border: '1px solid var(--color-border-subtle)',
               backgroundColor: 'rgba(18, 18, 26, 0.3)'
             }}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
           >
             <h3 className="text-lg md:text-xl font-semibold mb-5 md:mb-6 flex items-center gap-3" style={{ color: 'var(--color-text-primary)' }}>
               <span className="w-1 h-6 rounded-full" style={{ backgroundColor: 'var(--color-accent)' }}></span>
@@ -2252,12 +2288,15 @@ export default function Home() {
             <div className="lg:col-span-2 space-y-4">
               <motion.a 
                 href="mailto:kaushalambaliya69199@gmail.com" 
-                className="flex items-center gap-4 p-4 rounded-lg group"
+                className="flex items-center gap-4 p-4 rounded-lg group focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={{ border: '1px solid var(--color-border-subtle)' }}
                 whileHover={{ 
+                  opacity: 0.7,
                   borderColor: 'var(--color-accent)',
                   backgroundColor: 'rgba(94, 234, 212, 0.02)'
                 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(94, 234, 212, 0.1)' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-accent)' }}>
@@ -2275,12 +2314,15 @@ export default function Home() {
                 href="https://github.com/Kaushal2710" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 p-4 rounded-lg group"
+                className="flex items-center gap-4 p-4 rounded-lg group focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={{ border: '1px solid var(--color-border-subtle)' }}
                 whileHover={{ 
+                  opacity: 0.7,
                   borderColor: 'var(--color-accent)',
                   backgroundColor: 'rgba(94, 234, 212, 0.02)'
                 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(94, 234, 212, 0.1)' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-accent)' }}>
@@ -2297,12 +2339,15 @@ export default function Home() {
                 href="https://www.linkedin.com/in/kaushal-ambaliya-81934a220/" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 p-4 rounded-lg group"
+                className="flex items-center gap-4 p-4 rounded-lg group focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={{ border: '1px solid var(--color-border-subtle)' }}
                 whileHover={{ 
+                  opacity: 0.7,
                   borderColor: 'var(--color-accent)',
                   backgroundColor: 'rgba(94, 234, 212, 0.02)'
                 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
               >
                 <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(94, 234, 212, 0.1)' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-accent)' }}>
@@ -2419,19 +2464,19 @@ export default function Home() {
                 <motion.button
                   type="submit"
                   disabled={formStatus === 'loading'}
-                  className="w-full px-6 py-3.5 rounded-lg font-medium relative overflow-hidden"
+                  className="w-full px-6 py-3.5 rounded-lg font-medium relative overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2"
                   style={{ 
                     backgroundColor: formStatus === 'loading' ? 'rgba(94, 234, 212, 0.5)' : 'var(--color-accent)', 
                     color: 'var(--color-bg-primary)',
                     border: 'none',
                     cursor: formStatus === 'loading' ? 'not-allowed' : 'pointer'
                   }}
-                  whileHover={formStatus !== 'loading' ? { scale: 1.02, boxShadow: '0 0 40px rgba(94, 234, 212, 0.4)' } : {}}
+                  whileHover={formStatus !== 'loading' ? { opacity: 0.9 } : {}}
                   whileTap={formStatus !== 'loading' ? { scale: 0.98 } : {}}
+                  transition={{ duration: 0.15, ease: [0.4, 0.0, 0.2, 1] }}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.4 }}
                 >
                   {formStatus === 'loading' ? (
                     <span className="flex items-center justify-center gap-2">
